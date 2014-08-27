@@ -1,11 +1,11 @@
-package rf.protocols.debug.groups;
+package rf.protocols.debug.breakdown;
 
 import rf.protocols.core.impl.AbstractSignalListenerProperties;
 
 /**
  * @author Eugene Schava <eschava@gmail.com>
  */
-public class DebugGroupsSignalListenerProperties extends AbstractSignalListenerProperties {
+public class BreakdownSignalListenerProperties extends AbstractSignalListenerProperties {
     public long period = 1000;
     public int minLength = 0;
     public int maxLength = 10000;

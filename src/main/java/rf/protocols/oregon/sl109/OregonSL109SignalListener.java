@@ -41,6 +41,7 @@ public class OregonSL109SignalListener implements SignalLengthListener {
                     packetListener.onPacket(packet);
                 packet.clear();
             }
+            waitingForLongSignal = false;
         } else {
             if (isPreambuleSignal(lengthInMicros))
                 waitingForLongSignal = true;
