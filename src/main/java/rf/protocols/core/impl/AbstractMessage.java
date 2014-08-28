@@ -9,9 +9,9 @@ import rf.protocols.core.Packet;
  *
  * @author Eugene Schava <eschava@gmail.com>
  */
-public abstract class AbstractMessage<P extends Packet> implements Message {
+public abstract class AbstractMessage<P extends Packet> implements Message, Cloneable {
     private String name;
-    protected final P packet;
+    protected P packet;
 
     public AbstractMessage(String name, P packet) {
         this.name = name;
@@ -32,7 +32,7 @@ public abstract class AbstractMessage<P extends Packet> implements Message {
         StringBuilder result = new StringBuilder();
         result.append(getClass().getSimpleName()).append("{").append("name='").append(name).append('\'');
 
-        MessageMetaData<Message> metaData = getMetaData();
+        MessageMetaData<Message> metaData = (MessageMetaData<Message>) getMetaData();
         for (String field : metaData.getFieldNames()) {
             result.append(", ").append(field).append("=");
 
@@ -41,7 +41,19 @@ public abstract class AbstractMessage<P extends Packet> implements Message {
             else
                 result.append("'").append(metaData.getNumericField(this, field)).append("'");
         }
+        result.append("}");
 
         return result.toString();
+    }
+
+    @Override
+    public Message clone() {
+        try {
+            AbstractMessage result = (AbstractMessage) super.clone();
+            result.packet = packet.clone();
+            return result;
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

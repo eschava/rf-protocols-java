@@ -1,12 +1,13 @@
 package rf.protocols.core;
 
 import rf.protocols.core.impl.SignalLengthAdapterLevelListener;
-import rf.protocols.core.impl.SignalLengthCompoundListener;
-import rf.protocols.core.impl.SignalLevelCompoundListener;
+import rf.protocols.core.impl.SignalLengthListenerGroup;
+import rf.protocols.core.impl.SignalLevelListenerGroup;
 import rf.protocols.oregon.sl109.OregonSL109SignalListenerFactory;
 import rf.protocols.oregon.v2.OregonV2SignalListenerFactory;
 import rf.protocols.oregon.v3.OregonV3SignalListenerFactory;
 import rf.protocols.owl.OwlSignalListenerFactory;
+import rf.protocols.pt2262.PT2262SignalListenerFactory;
 
 import java.util.*;
 
@@ -32,6 +33,7 @@ public class ProtocolRegistry {
         registerFactory(new OregonV2SignalListenerFactory());
         registerFactory(new OregonV3SignalListenerFactory());
         registerFactory(new OwlSignalListenerFactory());
+        registerFactory(new PT2262SignalListenerFactory());
     }
 
     public void registerFactory(SignalLevelListenerFactory signalLevelListenerFactory) {
@@ -102,6 +104,22 @@ public class ProtocolRegistry {
         return null;
     }
 
+    @SuppressWarnings("unchecked")
+    public <P extends Packet> SignalLevelListener createListener(PacketListener<P> packetListener, String protocol) {
+        if (signalListenerFactoryMap.containsKey(protocol)) {
+            SignalLevelListenerFactory listenerFactory = signalListenerFactoryMap.get(protocol);
+            return listenerFactory.createListener(packetListener);
+        }
+
+        if (signalLengthListenerFactoryMap.containsKey(protocol)) {
+            SignalLengthListenerFactory listenerFactory = signalLengthListenerFactoryMap.get(protocol);
+            SignalLengthListener signalLengthListener = listenerFactory.createListener(packetListener);
+            return new SignalLengthAdapterLevelListener(signalLengthListener);
+        }
+
+        return null;
+    }
+
     public <M extends Message> SignalLevelListener createListener(MessageListener<M> messageListener, Collection<String> protocols) {
         if (protocols.size() == 1)
             return createListener(messageListener, protocols.iterator().next());
@@ -124,7 +142,7 @@ public class ProtocolRegistry {
         if (signalLengthListeners.size() > 0) {
             SignalLengthListener lengthListener = signalLengthListeners.size() == 1
                     ? signalLengthListeners.get(0)
-                    : new SignalLengthCompoundListener(signalLengthListeners);
+                    : new SignalLengthListenerGroup(signalLengthListeners);
             signalLevelListeners.add(new SignalLengthAdapterLevelListener(lengthListener));
         }
 
@@ -142,6 +160,6 @@ public class ProtocolRegistry {
 
         return signalLevelListeners.size() == 1
                 ? signalLevelListeners.get(0)
-                : new SignalLevelCompoundListener(signalLevelListeners);
+                : new SignalLevelListenerGroup(signalLevelListeners);
     }
 }

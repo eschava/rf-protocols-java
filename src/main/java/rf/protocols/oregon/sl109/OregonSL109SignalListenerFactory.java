@@ -1,7 +1,7 @@
 package rf.protocols.oregon.sl109;
 
 import rf.protocols.core.MessageListener;
-import rf.protocols.core.SignalLengthListener;
+import rf.protocols.core.PacketListener;
 import rf.protocols.core.SignalLengthListenerFactory;
 import rf.protocols.core.impl.AbstractSignalListenerFactory;
 import rf.protocols.core.impl.BitPacket;
@@ -19,8 +19,13 @@ public class OregonSL109SignalListenerFactory
     }
 
     @Override
-    public SignalLengthListener createListener(MessageListener messageListener) {
+    public OregonSL109SignalListener createListener(MessageListener messageListener) {
         MessageFactoryPacketListener<BitPacket, OregonSL109Message> packetListener = new MessageFactoryPacketListener<BitPacket, OregonSL109Message>(new OregonSL109MessageFactory(getName()), messageListener);
+        return createListener(packetListener);
+    }
+
+    @Override
+    public OregonSL109SignalListener createListener(PacketListener packetListener) {
         OregonSL109SignalListener signalListener = new OregonSL109SignalListener(packetListener);
         signalListener.setProperties(getProperties());
         return signalListener;

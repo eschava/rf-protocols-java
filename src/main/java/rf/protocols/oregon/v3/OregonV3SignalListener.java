@@ -34,7 +34,7 @@ public class OregonV3SignalListener implements SignalLengthListener {
     public void onSignal(boolean high, long lengthInMicros) {
         boolean reset = false;
 
-        if (lengthInMicros >= properties.minSignalLength && lengthInMicros <= properties.maxSignalLength) {
+        if (properties.signalLength.isInside(lengthInMicros)) {
             boolean isLong = lengthInMicros >= properties.minLongSignalLength;
             switch (state) {
                 case Preambule:

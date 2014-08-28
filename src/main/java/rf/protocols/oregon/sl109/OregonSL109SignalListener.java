@@ -51,18 +51,18 @@ public class OregonSL109SignalListener implements SignalLengthListener {
     }
 
     private boolean isPreambuleSignal(long lengthInMsec) {
-        return lengthInMsec >= properties.preambuleMinLength && lengthInMsec <= properties.preambuleMaxLength;
+        return properties.preambuleLength.isInside(lengthInMsec);
     }
 
     private boolean isZeroSignal(long lengthInMsec) {
-        return lengthInMsec >= properties.zeroMinLength && lengthInMsec <= properties.zeroMaxLength;
+        return properties.zeroLength.isInside(lengthInMsec);
     }
 
     private boolean isOneSignal(long lengthInMsec) {
-        return lengthInMsec >= properties.oneMinLength && lengthInMsec <= properties.oneMaxLength;
+        return properties.oneLength.isInside(lengthInMsec);
     }
 
     private boolean isEndSignal(long lengthInMsec) {
-        return lengthInMsec >= properties.endMinLength && lengthInMsec <= properties.endMaxLength;
+        return properties.endLength.isInside(lengthInMsec);
     }
 }

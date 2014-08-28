@@ -24,6 +24,11 @@ public class OwlSignalListenerFactory
     @Override
     public SignalLengthListener createListener(MessageListener messageListener) {
         PacketListener<BitPacket> packetListener = new MessageFactoryPacketListener<BitPacket, OwlMessage>(new OwlMessageFactory(getName()), messageListener);
+        return createListener(packetListener);
+    }
+
+    @Override
+    public SignalLengthListener createListener(PacketListener packetListener) {
         OregonV3SignalListener listener = new OregonV3SignalListener(packetListener);
         listener.setProperties(getProperties());
         return listener;

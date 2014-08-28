@@ -1,7 +1,7 @@
 package rf.protocols.core;
 
 /**
- * @author Eugeny.Schava
+ * @author Eugene Schava <eschava@gmail.com>
  */
 public class Interval {
     private long min, max;
@@ -10,9 +10,22 @@ public class Interval {
         min = max = med;
     }
 
+    public Interval(long med, double tolerance) {
+        this(med);
+        setTolerance(tolerance);
+    }
+
     public Interval(long min, long max) {
         this.min = min;
         this.max = max;
+    }
+
+    public long getMin() {
+        return min;
+    }
+
+    public long getMax() {
+        return max;
     }
 
     public void setMin(long min) {

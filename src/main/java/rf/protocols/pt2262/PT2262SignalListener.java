@@ -6,7 +6,7 @@ import rf.protocols.core.SignalLengthListener;
 import rf.protocols.core.impl.BitPacket;
 
 /**
- * @author Eugeny.Schava
+ * @author Eugene Schava <eschava@gmail.com>
  */
 public class PT2262SignalListener implements SignalLengthListener {
 
@@ -37,10 +37,21 @@ public class PT2262SignalListener implements SignalLengthListener {
     public void onSignal(boolean high, long lengthInMicros) {
         boolean reset = false;
 
+        if (waitingFor != State.Separator && waitingFor != State.SecondSeparator &&
+                isSecondSeparatorSignal(lengthInMicros)) {
+
+            if (packet.getSize() >= properties.minPacketSize)
+                packetListener.onPacket(packet);
+
+            packet.clear();
+            waitingFor = State.Separator;
+            return;
+        }
+
         switch (waitingFor) {
             case Separator:
                 if (isSeparatorSignal(lengthInMicros)) {
-                    waitingFor = State.SecondSeparator;
+                    waitingFor = State.Signal;
                     setSeparatorLength(lengthInMicros);
                 }
                 return; // !!! not break
@@ -57,10 +68,6 @@ public class PT2262SignalListener implements SignalLengthListener {
                     waitingFor = State.Long;
                 } else if (isLongSignal(lengthInMicros)) {
                     waitingFor = State.Short;
-                } else if (isSecondSeparatorSignal(lengthInMicros)) {
-                    if (packet.getSize() >= properties.minPacketSize)
-                        packetListener.onPacket(packet);
-                    reset = true;
                 } else {
                     reset = true;
                 }
@@ -89,7 +96,7 @@ public class PT2262SignalListener implements SignalLengthListener {
             packet.clear();
 
             if (isSeparatorSignal(lengthInMicros)) {
-                waitingFor = State.SecondSeparator;
+                waitingFor = State.Signal;
                 setSeparatorLength(lengthInMicros);
             } else {
                 waitingFor = State.Separator;

@@ -6,4 +6,5 @@ package rf.protocols.core;
  * @author Eugene Schava <eschava@gmail.com>
  */
 public interface Packet {
+    Packet clone();
 }

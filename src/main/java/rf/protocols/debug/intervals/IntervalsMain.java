@@ -15,7 +15,7 @@ import rf.protocols.core.impl.SignalLengthAdapterLevelListener;
 import java.util.Properties;
 
 /**
- * @author Eugeny.Schava
+ * @author Eugene Schava <eschava@gmail.com>
  */
 public class IntervalsMain {
 
@@ -49,6 +49,7 @@ public class IntervalsMain {
         board.getPins().add(pin);
 
         DigitalInput input = board.getPin("PI14").as(DigitalInput.class);
+        input.setInterruptDebounceMs(-1);
         intervalSignalListener.start();
         input.enableInterrupts();
         input.addInterruptListener(new BulldogInterruptListener(signalListener));
@@ -57,24 +58,26 @@ public class IntervalsMain {
     }
 
     private static void printPacket(IntervalsSignalListenerProperties properties, IntervalsPacket packet) {
+        System.out.print("[");
         System.out.print(packet.getBeforePacketLength());
-        System.out.print("-");
+        System.out.print("]");
 
         boolean isFirst = true;
         for (String intervalName : packet.getIntervals()) {
             // separator
-            if (!isFirst) {
-                if (properties.namesSeparator != null)
+            if (properties.namesSeparator != null) {
+                if (!isFirst)
                     System.out.print(properties.namesSeparator);
-            } else {
-                isFirst = false;
+                else
+                    isFirst = false;
             }
 
             System.out.print(intervalName);
         }
 
-        System.out.print("-");
+        System.out.print("[");
         System.out.print(packet.getAfterPacketLength());
+        System.out.print("]");
 
         System.out.print(" (");
         System.out.print(packet.getIntervals().size());

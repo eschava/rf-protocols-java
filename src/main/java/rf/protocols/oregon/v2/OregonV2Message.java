@@ -28,19 +28,23 @@ public class OregonV2Message extends AbstractMessage<BitPacket>
 
     @Override
     public boolean isValid() {
-        return isLengthValid() && isCrcValid();
+        return isCrcValid();
     }
-
-    public boolean isLengthValid() {
-        throw new UnsupportedOperationException();
-    }
+//
+//    public boolean isLengthValid() {
+//        return packet.getSize() == 80;
+//    }
 
     public boolean isCrcValid() {
         return true; // TODO
     }
 
+    public String getDeviceType() {
+        return Integer.toHexString(packet.getInt(7, 0)) + Integer.toHexString(packet.getInt(15, 8));
+    }
+
     public double getTemperature() {
-        throw new UnsupportedOperationException();
+        return packet.getInt(47, 44) * 10 + packet.getInt(43, 40) + packet.getInt(39, 36) / 10d;
     }
 
     public double getHumidity() {

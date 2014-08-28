@@ -8,7 +8,9 @@ package rf.protocols.core;
 public interface Message {
     String getName();
 
-    MessageMetaData<Message> getMetaData();
+    MessageMetaData<? extends Message> getMetaData();
 
     boolean isValid();
+
+    Message clone();
 }

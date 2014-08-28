@@ -5,14 +5,14 @@ import rf.protocols.core.SignalLengthListener;
 import java.util.Collection;
 
 /**
- * Compound implementation of {@link rf.protocols.core.SignalLengthListener}
+ * Group of {@link rf.protocols.core.SignalLengthListener}
  *
  * @author Eugene Schava <eschava@gmail.com>
  */
-public class SignalLengthCompoundListener implements SignalLengthListener {
+public class SignalLengthListenerGroup implements SignalLengthListener {
     private Collection<SignalLengthListener> listeners;
 
-    public SignalLengthCompoundListener(Collection<SignalLengthListener> listeners) {
+    public SignalLengthListenerGroup(Collection<SignalLengthListener> listeners) {
         this.listeners = listeners;
     }
 

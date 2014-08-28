@@ -9,7 +9,7 @@ import java.util.BitSet;
  *
  * @author Eugene Schava <eschava@gmail.com>
  */
-public class BitPacket implements Packet {
+public class BitPacket implements Packet, Cloneable {
     private BitSet bitSet;
     private int size = 0;
 
@@ -63,5 +63,16 @@ public class BitPacket implements Packet {
             sb.append(Integer.toHexString(i));
         }
         return sb.toString();
+    }
+
+    @Override
+    public BitPacket clone() {
+        try {
+            BitPacket result = (BitPacket) super.clone();
+            result.bitSet = (BitSet) bitSet.clone();
+            return result;
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

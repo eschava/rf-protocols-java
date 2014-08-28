@@ -22,6 +22,11 @@ public class OregonV3SignalListenerFactory
     @Override
     public SignalLengthListener createListener(MessageListener messageListener) {
         PacketListener<BitPacket> packetListener = new MessageFactoryPacketListener<BitPacket, OregonV3Message>(new OregonV3MessageFactory(getName()), messageListener);
+        return createListener(packetListener);
+    }
+
+    @Override
+    public SignalLengthListener createListener(PacketListener packetListener) {
         OregonV3SignalListener listener = new OregonV3SignalListener(packetListener);
         listener.setProperties(getProperties());
         return listener;

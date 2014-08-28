@@ -46,4 +46,9 @@ public class IntervalsPacket implements Packet {
     public List<String> getIntervals() {
         return intervals;
     }
+
+    @Override
+    public Packet clone() {
+        throw new UnsupportedOperationException();
+    }
 }

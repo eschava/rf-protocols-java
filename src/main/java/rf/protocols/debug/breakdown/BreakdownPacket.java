@@ -47,4 +47,9 @@ public class BreakdownPacket implements Packet {
     public int getMoreThanGrouppedCount() {
         return moreThanGrouppedCount;
     }
+
+    @Override
+    public Packet clone() {
+        throw new UnsupportedOperationException();
+    }
 }

@@ -27,6 +27,10 @@ public class OregonV2SignalListener implements SignalLengthListener {
         reset();
     }
 
+    public OregonV2SignalListenerProperties getProperties() {
+        return properties;
+    }
+
     public void setProperties(OregonV2SignalListenerProperties properties) {
         this.properties = properties;
     }
@@ -35,7 +39,7 @@ public class OregonV2SignalListener implements SignalLengthListener {
     public void onSignal(boolean high, long lengthInMicros) {
         boolean reset = false;
 
-        if (lengthInMicros >= properties.minSignalLength && lengthInMicros <= properties.maxSignalLength) {
+        if (properties.signalLength.isInside(lengthInMicros)) {
             boolean isLong = lengthInMicros >= properties.minLongSignalLength;
             switch (state) {
                 case Preambule:
@@ -80,8 +84,10 @@ public class OregonV2SignalListener implements SignalLengthListener {
         lastBit = lastBit ^ invert;
         if (skipBit)
             skipBit = false;
-        else
+        else {
             packet.addBit(lastBit);
+            skipBit = true;
+        };
     }
 
     public void reset() {

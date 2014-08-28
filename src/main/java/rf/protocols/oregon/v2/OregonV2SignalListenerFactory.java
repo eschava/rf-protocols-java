@@ -2,7 +2,6 @@ package rf.protocols.oregon.v2;
 
 import rf.protocols.core.MessageListener;
 import rf.protocols.core.PacketListener;
-import rf.protocols.core.SignalLengthListener;
 import rf.protocols.core.SignalLengthListenerFactory;
 import rf.protocols.core.impl.AbstractSignalListenerFactory;
 import rf.protocols.core.impl.BitPacket;
@@ -20,8 +19,13 @@ public class OregonV2SignalListenerFactory
     }
 
     @Override
-    public SignalLengthListener createListener(MessageListener messageListener) {
+    public OregonV2SignalListener createListener(MessageListener messageListener) {
         PacketListener<BitPacket> packetListener = new MessageFactoryPacketListener<BitPacket, OregonV2Message>(new OregonV2MessageFactory(getName()), messageListener);
+        return createListener(packetListener);
+    }
+
+    @Override
+    public OregonV2SignalListener createListener(PacketListener packetListener) {
         OregonV2SignalListener listener = new OregonV2SignalListener(packetListener);
         listener.setProperties(getProperties());
         return listener;

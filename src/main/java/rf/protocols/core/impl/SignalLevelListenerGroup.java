@@ -5,14 +5,14 @@ import rf.protocols.core.SignalLevelListener;
 import java.util.Collection;
 
 /**
- * Compound implementation of {@link rf.protocols.core.SignalLevelListener}
+ * Group of {@link rf.protocols.core.SignalLevelListener}
  *
  * @author Eugene Schava <eschava@gmail.com>
  */
-public class SignalLevelCompoundListener implements SignalLevelListener {
+public class SignalLevelListenerGroup implements SignalLevelListener {
     private Collection<SignalLevelListener> listeners;
 
-    public SignalLevelCompoundListener(Collection<SignalLevelListener> listeners) {
+    public SignalLevelListenerGroup(Collection<SignalLevelListener> listeners) {
         this.listeners = listeners;
     }
 

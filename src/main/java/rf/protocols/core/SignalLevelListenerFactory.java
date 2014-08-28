@@ -7,4 +7,5 @@ package rf.protocols.core;
 */
 public interface SignalLevelListenerFactory extends SignalListenerFactory<SignalLevelListenerFactory> {
     SignalLevelListener createListener(MessageListener messageListener);
+    SignalLevelListener createListener(PacketListener packetListener);
 }

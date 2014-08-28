@@ -15,7 +15,7 @@ import rf.protocols.core.impl.SignalLengthAdapterLevelListener;
 import java.util.Properties;
 
 /**
- * @author Eugeny.Schava
+ * @author Eugene Schava <eschava@gmail.com>
  */
 public class BreakdownMain {
 
@@ -51,6 +51,7 @@ public class BreakdownMain {
         printHeader(debugGroupsSignalListener.getProperties());
 
         DigitalInput input = board.getPin("PI14").as(DigitalInput.class);
+        input.setInterruptDebounceMs(-1);
         debugGroupsSignalListener.start();
         input.enableInterrupts();
         input.addInterruptListener(new BulldogInterruptListener(signalListener));
