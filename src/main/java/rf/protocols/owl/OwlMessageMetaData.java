@@ -9,8 +9,8 @@ import java.util.Collection;
  * @author Eugene Schava <eschava@gmail.com>
  */
 public class OwlMessageMetaData implements MessageMetaData<OwlMessage> {
-    public static final String CURRENT_POWER_FIELD = "Temperature";
-    public static final String TOTAL_POWER_FIELD = "Humidity";
+    public static final String CURRENT_POWER_FIELD = "CurrentPower";
+    public static final String TOTAL_POWER_FIELD = "TotalPower";
 
     private static final Collection<String> FIELD_NAMES = Arrays.asList(CURRENT_POWER_FIELD, TOTAL_POWER_FIELD);
 

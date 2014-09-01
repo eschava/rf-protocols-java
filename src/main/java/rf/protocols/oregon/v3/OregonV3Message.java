@@ -27,12 +27,12 @@ public class OregonV3Message extends AbstractMessage<BitPacket>
 
     @Override
     public boolean isValid() {
-        return isLengthValid() && isCrcValid();
+        return /*isLengthValid() && */isCrcValid();
     }
 
-    public boolean isLengthValid() {
-        throw new UnsupportedOperationException();
-    }
+//    public boolean isLengthValid() {
+//        throw new UnsupportedOperationException();
+//    }
 
     public boolean isCrcValid() {
         return true; // TODO

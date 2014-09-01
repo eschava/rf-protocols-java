@@ -29,7 +29,7 @@ public class OregonSL109MessageMetaData implements MessageMetaData<OregonSL109Me
         if (fieldName.equals(TEMPERATURE_FIELD))
             return message.getTemperature();
         else if (fieldName.equals(HUMIDITY_FIELD))
-            return message.getTemperature();
+            return message.getHumidity();
         throw new UnsupportedOperationException();
     }
 

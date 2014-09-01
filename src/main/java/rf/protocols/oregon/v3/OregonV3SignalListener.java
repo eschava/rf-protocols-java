@@ -26,6 +26,10 @@ public class OregonV3SignalListener implements SignalLengthListener {
         reset();
     }
 
+    public OregonV3SignalListenerProperties getProperties() {
+        return properties;
+    }
+
     public void setProperties(OregonV3SignalListenerProperties properties) {
         this.properties = properties;
     }
@@ -38,7 +42,7 @@ public class OregonV3SignalListener implements SignalLengthListener {
             boolean isLong = lengthInMicros >= properties.minLongSignalLength;
             switch (state) {
                 case Preambule:
-                    if (isLong) {
+                    if (!isLong) {
                         preambuleSize++;
                     } else if (preambuleSize >= properties.minPreambuleSize) {
                         addBit(false);

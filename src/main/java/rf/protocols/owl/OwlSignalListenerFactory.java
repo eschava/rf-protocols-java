@@ -2,7 +2,6 @@ package rf.protocols.owl;
 
 import rf.protocols.core.MessageListener;
 import rf.protocols.core.PacketListener;
-import rf.protocols.core.SignalLengthListener;
 import rf.protocols.core.SignalLengthListenerFactory;
 import rf.protocols.core.impl.AbstractSignalListenerFactory;
 import rf.protocols.core.impl.BitPacket;
@@ -22,13 +21,13 @@ public class OwlSignalListenerFactory
     }
 
     @Override
-    public SignalLengthListener createListener(MessageListener messageListener) {
+    public OregonV3SignalListener createListener(MessageListener messageListener) {
         PacketListener<BitPacket> packetListener = new MessageFactoryPacketListener<BitPacket, OwlMessage>(new OwlMessageFactory(getName()), messageListener);
         return createListener(packetListener);
     }
 
     @Override
-    public SignalLengthListener createListener(PacketListener packetListener) {
+    public OregonV3SignalListener createListener(PacketListener packetListener) {
         OregonV3SignalListener listener = new OregonV3SignalListener(packetListener);
         listener.setProperties(getProperties());
         return listener;

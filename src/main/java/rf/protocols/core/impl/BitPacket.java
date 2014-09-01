@@ -2,6 +2,8 @@ package rf.protocols.core.impl;
 
 import rf.protocols.core.Packet;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.BitSet;
 
 /**
@@ -37,7 +39,23 @@ public class BitPacket implements Packet, Cloneable {
     }
 
     public byte[] getBytes() {
-        return bitSet.toByteArray();
+        long[] words = bitSet.toLongArray();
+        if (words.length == 0)
+            return new byte[0];
+
+        byte[] bytes = new byte[(size + 7) / 8];
+        ByteBuffer bb = ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN);
+
+        for (int i = 0; i < words.length - 1; i++)
+            bb.putLong(words[i]);
+
+        long x = words[words.length - 1];
+        int bytesLeft = ((size - (words.length - 1) * 64) + 7) / 8;
+        for (int i = 0 ; i < bytesLeft; i++) {
+            bb.put((byte) (x & 0xff));
+            x >>>= 8;
+        }
+        return bytes;
     }
 
     public int getInt(int fromBit, int toBit) {
@@ -54,13 +72,33 @@ public class BitPacket implements Packet, Cloneable {
         return result;
     }
 
+//    public String getHex(int fromBit, int toBit) {
+//        // FIXME
+//        StringBuilder sb = new StringBuilder();
+//        int i = fromBit;
+//        while (i != toBit) {
+//            int bits = Math.min(7, toBit - i);
+//            int b = getInt(i, i + bits);
+//            sb.append(Integer.toHexString(b));
+//            i += bits;
+//        }
+//        return sb.toString();
+//    }
+
     @Override
     public String toString() {
+//        return getHex(0, size - 1);
         StringBuilder sb = new StringBuilder();
+        int c = 0;
         for (byte b1 : getBytes()) {
             int i = b1;
             if (i < 0) i+=256;
-            sb.append(Integer.toHexString(i));
+            boolean nibble = size - c <= 4;
+            String hex = Integer.toHexString(i);
+            if (!nibble && hex.length() == 1)
+                sb.append('0');
+            sb.append(hex);
+            c += 8;
         }
         return sb.toString();
     }
