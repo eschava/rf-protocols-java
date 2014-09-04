@@ -1,35 +1,38 @@
-package rf.protocols.pt2262;
+package rf.protocols.remoteswitch;
 
 import rf.protocols.core.Interval;
 import rf.protocols.core.PacketListener;
 import rf.protocols.core.SignalLengthListener;
-import rf.protocols.core.impl.BitPacket;
 
 /**
  * @author Eugene Schava <eschava@gmail.com>
  */
-public class PT2262SignalListener implements SignalLengthListener {
+public class RemoteSwitchSignalListener implements SignalLengthListener {
 
-    private static enum State {Separator, SecondSeparator, Signal, Short, Long}
+    private static enum State {Separator, Signal, Short, Long, Sync, SecondSeparator}
 
-    private PacketListener<BitPacket> packetListener;
-    private PT2262SignalListenerProperties properties = new PT2262SignalListenerProperties();
+    private PacketListener<RemoteSwitchPacket> packetListener;
+    private RemoteSwitchSignalListenerProperties properties = new RemoteSwitchSignalListenerProperties();
 
-    private BitPacket packet = new BitPacket(100);
+    // some kind of packet
+    private long value = 0;
+    private Boolean previousBit = null;
+    private int size = 0;
+
     private State waitingFor = State.Separator;
     private Interval secondSeparatorInterval = new Interval(-1);
     private Interval shortInterval = new Interval(-1);
     private Interval longInterval = new Interval(-1);
 
-    public PT2262SignalListener(PacketListener<BitPacket> packetListener) {
+    public RemoteSwitchSignalListener(PacketListener<RemoteSwitchPacket> packetListener) {
         this.packetListener = packetListener;
     }
 
-    public PT2262SignalListenerProperties getProperties() {
+    public RemoteSwitchSignalListenerProperties getProperties() {
         return properties;
     }
 
-    public void setProperties(PT2262SignalListenerProperties properties) {
+    public void setProperties(RemoteSwitchSignalListenerProperties properties) {
         this.properties = properties;
     }
 
@@ -37,32 +40,13 @@ public class PT2262SignalListener implements SignalLengthListener {
     public void onSignal(boolean high, long lengthInMicros) {
         boolean reset = false;
 
-        if (waitingFor != State.Separator && waitingFor != State.SecondSeparator &&
-                isSecondSeparatorSignal(lengthInMicros)) {
-
-            if (packet.getSize() >= properties.minPacketSize)
-                packetListener.onPacket(packet);
-
-            packet.clear();
-            waitingFor = State.Separator;
-            return;
-        }
-
         switch (waitingFor) {
             case Separator:
                 if (isSeparatorSignal(lengthInMicros)) {
                     waitingFor = State.Signal;
                     setSeparatorLength(lengthInMicros);
                 }
-                return; // !!! not break
-
-            // doesn't happen after bad RF data quality
-//            case SecondSeparator:
-//                if (isSecondSeparatorSignal(lengthInMicros)) {
-//                    waitingFor = State.Signal;
-//                    return;  // !!! not break
-//                }
-//                break;
+                break;
 
             case Signal:
                 if (isShortSignal(lengthInMicros)) {
@@ -76,8 +60,8 @@ public class PT2262SignalListener implements SignalLengthListener {
 
             case Short:
                 if (isShortSignal(lengthInMicros)) {
-                    packet.addBit(false);
                     waitingFor = State.Signal;
+                    reset = !addBit(false);
                 } else {
                     reset = true;
                 }
@@ -85,16 +69,31 @@ public class PT2262SignalListener implements SignalLengthListener {
 
             case Long:
                 if (isLongSignal(lengthInMicros)) {
-                    packet.addBit(true);
                     waitingFor = State.Signal;
+                    reset = !addBit(true);
                 } else {
                     reset = true;
                 }
                 break;
+
+            case Sync:
+                if (isShortSignal(lengthInMicros)) {
+                    waitingFor = State.SecondSeparator;
+                } else {
+                    reset = true;
+                }
+                break;
+
+            case SecondSeparator:
+                if (isSecondSeparatorSignal(lengthInMicros)) {
+                    packetListener.onPacket(new RemoteSwitchPacket(value));
+                }
+                reset = true;
+                break;
         }
 
         if (reset) {
-            packet.clear();
+            clear();
 
             if (isSeparatorSignal(lengthInMicros)) {
                 waitingFor = State.Signal;
@@ -103,6 +102,37 @@ public class PT2262SignalListener implements SignalLengthListener {
                 waitingFor = State.Separator;
             }
         }
+    }
+
+    private boolean addBit(boolean bit) {
+        if (previousBit == null) {
+            previousBit = bit;
+            return true;
+        }
+
+        if (bit) {
+            // 01 is not possible
+            if (!previousBit)
+                return false;
+            // true-true means 0
+            value *= 3;
+        } else {
+            // both false-false and true-false are possible (means 1 and 2 respectively)
+            value = 3 * value + (previousBit ? 2 : 1);
+        }
+        size++;
+        previousBit = null;
+
+        if (size == properties.packetSize) {
+            waitingFor = State.Sync;
+        }
+        return true;
+    }
+
+    private void clear() {
+        value = 0;
+        size = 0;
+        previousBit = null;
     }
 
     private boolean isSeparatorSignal(long l) {

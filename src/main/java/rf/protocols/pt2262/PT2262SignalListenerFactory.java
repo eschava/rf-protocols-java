@@ -6,8 +6,8 @@ import rf.protocols.core.SignalLengthListenerFactory;
 import rf.protocols.core.impl.AbstractSignalListenerFactory;
 import rf.protocols.core.impl.BitPacket;
 import rf.protocols.core.impl.MessageFactoryPacketListener;
-import rf.protocols.core.message.CommandMessage;
-import rf.protocols.core.message.CommandMessageFactory;
+import rf.protocols.core.message.StringMessage;
+import rf.protocols.core.message.StringMessageFactory;
 
 /**
  * @author Eugene Schava <eschava@gmail.com>
@@ -22,7 +22,7 @@ public class PT2262SignalListenerFactory
 
     @Override
     public PT2262SignalListener createListener(MessageListener messageListener) {
-        MessageFactoryPacketListener<BitPacket, CommandMessage> packetListener = new MessageFactoryPacketListener<BitPacket, CommandMessage>(new CommandMessageFactory(getName()), messageListener);
+        MessageFactoryPacketListener<BitPacket, StringMessage> packetListener = new MessageFactoryPacketListener<BitPacket, StringMessage>(new StringMessageFactory(getName()), messageListener);
         return createListener(packetListener);
     }
 

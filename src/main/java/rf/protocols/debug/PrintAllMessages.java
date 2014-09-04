@@ -1,12 +1,10 @@
 package rf.protocols.debug;
 
 import org.bulldog.core.gpio.DigitalInput;
-import org.bulldog.core.gpio.base.DigitalIOFeature;
+import org.bulldog.core.gpio.Pin;
 import org.bulldog.core.platform.Board;
 import org.bulldog.core.platform.Platform;
-import org.bulldog.cubieboard.CubieboardPin;
-import org.bulldog.cubieboard.gpio.CubieboardDigitalInput;
-import org.bulldog.cubieboard.gpio.CubieboardDigitalOutput;
+import org.bulldog.cubieboard.Cubieboard;
 import rf.protocols.bulldog.BulldogInterruptListener;
 import rf.protocols.core.Message;
 import rf.protocols.core.MessageListener;
@@ -17,6 +15,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @author Eugene Schava <eschava@gmail.com>
@@ -24,6 +24,7 @@ import java.util.Properties;
 public class PrintAllMessages {
     public static void main(String[] args) throws InterruptedException, IOException {
         ProtocolRegistry registry = ProtocolRegistry.getInstance();
+        final ExecutorService printService = Executors.newSingleThreadExecutor();
 
         String propertiesFile = System.getProperty("propertiesFile");
         if (propertiesFile != null) {
@@ -45,15 +46,20 @@ public class PrintAllMessages {
         MessageListener<? extends Message> messageListener = new MessageListener<Message>() {
             @Override
             public void onMessage(Message message) {
-                System.out.println(message);
+                final Message clone = message.clone();
+                printService.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        System.out.println(clone);
+                    }
+                });
             }
         };
         SignalLevelListener signalLevelListener = registry.createListener(messageListener, protocolNames);
 
         Board board = Platform.createBoard();
         // TODO: pins should be moved to configuration
-        CubieboardPin pin = new CubieboardPin("PI14", 68, "I", 14, "68_pi14", true);
-        pin.addFeature(new DigitalIOFeature(pin, new CubieboardDigitalInput(pin), new CubieboardDigitalOutput(pin)));
+        Pin pin = ((Cubieboard) board).createDigitalIOPin("PI14", 68, "I", 14, "68_pi14", true);
         board.getPins().add(pin);
 
         DigitalInput input = board.getPin("PI14").as(DigitalInput.class);

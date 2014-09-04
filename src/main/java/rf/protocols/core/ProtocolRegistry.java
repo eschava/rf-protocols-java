@@ -8,6 +8,7 @@ import rf.protocols.oregon.v2.OregonV2SignalListenerFactory;
 import rf.protocols.oregon.v3.OregonV3SignalListenerFactory;
 import rf.protocols.owl.OwlSignalListenerFactory;
 import rf.protocols.pt2262.PT2262SignalListenerFactory;
+import rf.protocols.remoteswitch.RemoteSwitchSignalListenerFactory;
 
 import java.util.*;
 
@@ -34,6 +35,7 @@ public class ProtocolRegistry {
         registerFactory(new OregonV3SignalListenerFactory());
         registerFactory(new OwlSignalListenerFactory());
         registerFactory(new PT2262SignalListenerFactory());
+        registerFactory(new RemoteSwitchSignalListenerFactory());
     }
 
     public void registerFactory(SignalLevelListenerFactory signalLevelListenerFactory) {

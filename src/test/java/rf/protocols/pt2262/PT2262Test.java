@@ -2,7 +2,7 @@ package rf.protocols.pt2262;
 
 import org.junit.Test;
 import rf.protocols.core.MessageListener;
-import rf.protocols.core.message.CommandMessage;
+import rf.protocols.core.message.StringMessage;
 
 import static junit.framework.TestCase.assertEquals;
 
@@ -17,11 +17,11 @@ public class PT2262Test {
 
     @Test
     public void test() throws Exception {
-        final CommandMessage[] messages = new CommandMessage[1];
-        MessageListener<CommandMessage> messageListener = new MessageListener<CommandMessage>() {
+        final StringMessage[] messages = new StringMessage[1];
+        MessageListener<StringMessage> messageListener = new MessageListener<StringMessage>() {
             @Override
-            public void onMessage(CommandMessage message) {
-                messages[0] = (CommandMessage) message.clone();
+            public void onMessage(StringMessage message) {
+                messages[0] = (StringMessage) message.clone();
             }
         };
         PT2262SignalListenerFactory factory = new PT2262SignalListenerFactory();
@@ -32,7 +32,7 @@ public class PT2262Test {
             signalListener.onSignal(false, b);
         }
 
-        CommandMessage message = messages[0];
-        assertEquals("f75dfc", message.getCommand());
+        StringMessage message = messages[0];
+        assertEquals("f75dfc", message.getValue());
     }
 }

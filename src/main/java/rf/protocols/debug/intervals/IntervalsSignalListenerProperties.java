@@ -29,4 +29,5 @@ public class IntervalsSignalListenerProperties extends AbstractSignalListenerPro
     public String interval4Name = "4";
 
     public String namesSeparator = null;
+    public boolean useInterrupts = true;
 }

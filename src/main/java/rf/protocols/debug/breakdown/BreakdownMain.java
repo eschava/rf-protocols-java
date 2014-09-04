@@ -1,12 +1,10 @@
 package rf.protocols.debug.breakdown;
 
 import org.bulldog.core.gpio.DigitalInput;
-import org.bulldog.core.gpio.base.DigitalIOFeature;
+import org.bulldog.core.gpio.Pin;
 import org.bulldog.core.platform.Board;
 import org.bulldog.core.platform.Platform;
-import org.bulldog.cubieboard.CubieboardPin;
-import org.bulldog.cubieboard.gpio.CubieboardDigitalInput;
-import org.bulldog.cubieboard.gpio.CubieboardDigitalOutput;
+import org.bulldog.cubieboard.Cubieboard;
 import rf.protocols.bulldog.BulldogInterruptListener;
 import rf.protocols.core.PacketListener;
 import rf.protocols.core.SignalLevelListener;
@@ -44,8 +42,7 @@ public class BreakdownMain {
 
         Board board = Platform.createBoard();
         // TODO: pins should be moved to configuration
-        CubieboardPin pin = new CubieboardPin("PI14", 68, "I", 14, "68_pi14", true);
-        pin.addFeature(new DigitalIOFeature(pin, new CubieboardDigitalInput(pin), new CubieboardDigitalOutput(pin)));
+        Pin pin = ((Cubieboard) board).createDigitalIOPin("PI14", 68, "I", 14, "68_pi14", true);
         board.getPins().add(pin);
 
         printHeader(debugGroupsSignalListener.getProperties());

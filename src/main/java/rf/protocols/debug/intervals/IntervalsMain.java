@@ -1,12 +1,11 @@
 package rf.protocols.debug.intervals;
 
+import org.bulldog.core.Signal;
 import org.bulldog.core.gpio.DigitalInput;
-import org.bulldog.core.gpio.base.DigitalIOFeature;
+import org.bulldog.core.gpio.Pin;
 import org.bulldog.core.platform.Board;
 import org.bulldog.core.platform.Platform;
-import org.bulldog.cubieboard.CubieboardPin;
-import org.bulldog.cubieboard.gpio.CubieboardDigitalInput;
-import org.bulldog.cubieboard.gpio.CubieboardDigitalOutput;
+import org.bulldog.cubieboard.Cubieboard;
 import rf.protocols.bulldog.BulldogInterruptListener;
 import rf.protocols.core.PacketListener;
 import rf.protocols.core.SignalLevelListener;
@@ -40,19 +39,37 @@ public class IntervalsMain {
         });
         intervalSignalListener.setProperties(properties);
 
-        SignalLevelListener signalListener = new SignalLengthAdapterLevelListener(intervalSignalListener);
+        final SignalLevelListener signalListener = new SignalLengthAdapterLevelListener(intervalSignalListener);
 
         Board board = Platform.createBoard();
         // TODO: pins should be moved to configuration
-        CubieboardPin pin = new CubieboardPin("PI14", 68, "I", 14, "68_pi14", true);
-        pin.addFeature(new DigitalIOFeature(pin, new CubieboardDigitalInput(pin), new CubieboardDigitalOutput(pin)));
+        final Pin pin = ((Cubieboard) board).createDigitalIOPin("PI14", 68, "I", 14, "68_pi14", true);
         board.getPins().add(pin);
 
-        DigitalInput input = board.getPin("PI14").as(DigitalInput.class);
+        final DigitalInput input = board.getPin("PI14").as(DigitalInput.class);
         input.setInterruptDebounceMs(-1);
         intervalSignalListener.start();
-        input.enableInterrupts();
-        input.addInterruptListener(new BulldogInterruptListener(signalListener));
+
+        if (properties.useInterrupts) {
+            input.enableInterrupts();
+            input.addInterruptListener(new BulldogInterruptListener(signalListener));
+        } else {
+            Thread readingThread = new Thread() {
+                @Override
+                public void run() {
+                    Signal oldValue = null;
+                    while (true) {
+                        Signal value = input.read();
+                        if (value != oldValue) {
+                            signalListener.onSignal(value.getBooleanValue());
+                            oldValue = value;
+                        }
+                    }
+                }
+            };
+            readingThread.setDaemon(true);
+            readingThread.start();
+        }
 
         Thread.sleep(1000 * 1000 * 1000);
     }
