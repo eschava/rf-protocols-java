@@ -1,5 +1,6 @@
-package rf.protocols.core;
+package rf.protocols.registry;
 
+import rf.protocols.core.*;
 import rf.protocols.core.impl.SignalLengthAdapterLevelListener;
 import rf.protocols.core.impl.SignalLengthListenerGroup;
 import rf.protocols.core.impl.SignalLevelListenerGroup;
@@ -8,27 +9,30 @@ import rf.protocols.oregon.v2.OregonV2SignalListenerFactory;
 import rf.protocols.oregon.v3.OregonV3SignalListenerFactory;
 import rf.protocols.owl.OwlSignalListenerFactory;
 import rf.protocols.pt2262.PT2262SignalListenerFactory;
+import rf.protocols.registry.interfaces.SignalLengthListenerFactory;
+import rf.protocols.registry.interfaces.SignalLevelListenerFactory;
+import rf.protocols.registry.interfaces.SignalListenerFactory;
 import rf.protocols.remoteswitch.RemoteSwitchSignalListenerFactory;
 
 import java.util.*;
 
 /**
- * Registry of all user accessible protocols
+ * Registry of listeners for all user accessible protocols
  *
  * @author Eugene Schava <eschava@gmail.com>
  */
-public class ProtocolRegistry {
-    private static final ProtocolRegistry INSTANCE = new ProtocolRegistry();
+public class SignalListenerRegistry {
+    private static final SignalListenerRegistry INSTANCE = new SignalListenerRegistry();
 
     private final Set<String> factoryNames = new HashSet<String>();
     private final Map<String, SignalLevelListenerFactory> signalListenerFactoryMap = new HashMap<String, SignalLevelListenerFactory>();
     private final Map<String, SignalLengthListenerFactory> signalLengthListenerFactoryMap = new HashMap<String, SignalLengthListenerFactory>();
 
-    public static ProtocolRegistry getInstance() {
+    public static SignalListenerRegistry getInstance() {
         return INSTANCE;
     }
 
-    private ProtocolRegistry() {
+    private SignalListenerRegistry() {
         // register all known factories
         registerFactory(new OregonSL109SignalListenerFactory());
         registerFactory(new OregonV2SignalListenerFactory());

@@ -1,4 +1,4 @@
-package rf.protocols.core;
+package rf.protocols.registry.interfaces;
 
 /**
  * Factory of low-level RF signal listeners (base interface)

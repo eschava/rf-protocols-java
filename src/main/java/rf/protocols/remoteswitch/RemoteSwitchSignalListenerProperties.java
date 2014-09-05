@@ -15,4 +15,8 @@ public class RemoteSwitchSignalListenerProperties extends AbstractSignalListener
     public double shortSignalTolerance = 0.6;
     public double longSignalFraction = 3d / 31;
     public double longSignalTolerance = 0.2;
+
+    // sender properties
+    public long separatorLength = 4464;
+    public int repeats = 8;
 }

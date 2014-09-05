@@ -1,4 +1,8 @@
-package rf.protocols.core;
+package rf.protocols.registry.interfaces;
+
+import rf.protocols.core.MessageListener;
+import rf.protocols.core.PacketListener;
+import rf.protocols.core.SignalLengthListener;
 
 /**
  * Factory of low-level RF signal listeners

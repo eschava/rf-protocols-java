@@ -2,8 +2,8 @@ package rf.protocols.oregon.v2;
 
 import rf.protocols.core.MessageListener;
 import rf.protocols.core.PacketListener;
-import rf.protocols.core.SignalLengthListenerFactory;
-import rf.protocols.core.impl.AbstractSignalListenerFactory;
+import rf.protocols.registry.interfaces.SignalLengthListenerFactory;
+import rf.protocols.registry.interfaces.AbstractSignalListenerFactory;
 import rf.protocols.core.impl.BitPacket;
 import rf.protocols.core.impl.MessageFactoryPacketListener;
 

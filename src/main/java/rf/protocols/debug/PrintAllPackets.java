@@ -8,7 +8,7 @@ import org.bulldog.cubieboard.Cubieboard;
 import rf.protocols.bulldog.BulldogInterruptListener;
 import rf.protocols.core.Packet;
 import rf.protocols.core.PacketListener;
-import rf.protocols.core.ProtocolRegistry;
+import rf.protocols.registry.SignalListenerRegistry;
 import rf.protocols.core.SignalLevelListener;
 import rf.protocols.core.impl.SignalLevelListenerGroup;
 
@@ -25,7 +25,7 @@ import java.util.concurrent.Executors;
  */
 public class PrintAllPackets {
     public static void main(String[] args) throws InterruptedException, IOException {
-        ProtocolRegistry registry = ProtocolRegistry.getInstance();
+        SignalListenerRegistry registry = SignalListenerRegistry.getInstance();
         final ExecutorService printService = Executors.newSingleThreadExecutor();
 
         String propertiesFile = System.getProperty("propertiesFile");

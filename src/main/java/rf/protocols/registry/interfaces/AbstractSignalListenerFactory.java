@@ -1,10 +1,9 @@
-package rf.protocols.core.impl;
+package rf.protocols.registry.interfaces;
 
-import rf.protocols.core.SignalListenerFactory;
 import rf.protocols.core.SignalListenerProperties;
 
 /**
- * Helper implementation of {@link rf.protocols.core.SignalListenerFactory}
+ * Helper implementation of {@link SignalListenerFactory}
  *
  * @author Eugene Schava <eschava@gmail.com>
  */

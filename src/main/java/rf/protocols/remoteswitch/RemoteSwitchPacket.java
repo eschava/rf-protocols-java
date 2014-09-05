@@ -12,6 +12,14 @@ public class RemoteSwitchPacket implements Packet, Cloneable {
         this.value = value;
     }
 
+    public RemoteSwitchPacket(String value) {
+        this.value = Long.parseLong(value, 3);
+    }
+
+    public long getValue() {
+        return value;
+    }
+
     @Override
     public String toString() {
         return Long.toString(value, 3);
