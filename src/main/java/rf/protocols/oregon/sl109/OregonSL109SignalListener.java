@@ -37,7 +37,7 @@ public class OregonSL109SignalListener implements SignalLengthListener {
             else if (isOneSignal(lengthInMicros))
                 packet.addBit(true);
             else {
-                if (isEndSignal(lengthInMicros))
+                if (isEndSignal(lengthInMicros) && packet.getSize() == properties.packetSize)
                     packetListener.onPacket(packet);
                 packet.clear();
             }

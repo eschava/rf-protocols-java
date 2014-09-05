@@ -27,22 +27,45 @@ public class OregonSL109Message extends AbstractMessage<BitPacket>
 
     @Override
     public boolean isValid() {
-        return isLengthValid() && isCrcValid();
+        return /*isLengthValid() && */isCrcValid();
     }
 
-    public boolean isLengthValid() {
-        return packet.getSize() == 38;
-    }
+//    public boolean isLengthValid() {
+//        return packet.getSize() == 38;
+//    }
 
     public boolean isCrcValid() {
-        return true; // TODO
+        return getCheckSum() == calculateCheckSum();
+    }
+
+    public int getCheckSum() {
+        return packet.getInt(0, 3);
+    }
+
+    public int calculateCheckSum() {
+        int sum = packet.getInt(4, 5);
+        for (int i = 6; i < packet.getSize(); i += 4)
+            sum += packet.getInt(i, i + 3);
+        return sum % 16;
+    }
+
+    public int getChannelId() {
+        return packet.getInt(4, 5);
     }
 
     public double getTemperature() {
-        return (256 * packet.getInt(21, 18) + 16 * packet.getInt(17, 14) + packet.getInt(29, 26)) / 10.0d;
+        return (256 * packet.getInt(14, 17) + 16 * packet.getInt(18, 21) + packet.getInt(22, 25)) / 10.0d;
     }
 
     public double getHumidity() {
-        return packet.getInt(13, 10) * 10 + packet.getInt(9, 6);
+        return packet.getInt(6, 9) * 10 + packet.getInt(10, 13);
+    }
+
+    public int getStatus() {
+        return packet.getInt(26, 29);
+    }
+
+    public int getRollingCode() {
+        return packet.getInt(30, 37);
     }
 }

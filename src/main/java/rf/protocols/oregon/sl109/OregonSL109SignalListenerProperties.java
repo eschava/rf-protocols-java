@@ -12,4 +12,5 @@ public class OregonSL109SignalListenerProperties extends AbstractSignalListenerP
     public Interval zeroLength = new Interval(1600, 2200);
     public Interval oneLength = new Interval(3800, 4200);
     public Interval endLength = new Interval(8000, 10000);
+    public int packetSize = 38;
 }
