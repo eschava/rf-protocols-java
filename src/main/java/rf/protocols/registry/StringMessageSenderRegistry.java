@@ -5,8 +5,8 @@ import rf.protocols.core.PacketFactory;
 import rf.protocols.core.PacketSender;
 import rf.protocols.core.SignalLengthSender;
 import rf.protocols.core.message.StringMessage;
-import rf.protocols.remoteswitch.RemoteSwitchPacketFactory;
-import rf.protocols.remoteswitch.RemoteSwitchPacketSender;
+import rf.protocols.device.remoteswitch.RemoteSwitchPacketFactory;
+import rf.protocols.device.remoteswitch.RemoteSwitchPacketSender;
 
 import java.util.HashMap;
 import java.util.HashSet;
