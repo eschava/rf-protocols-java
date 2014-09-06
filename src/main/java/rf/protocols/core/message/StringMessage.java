@@ -12,17 +12,17 @@ import java.util.Collections;
 public class StringMessage implements Message, Cloneable {
     private static final MessageMetaData<? extends Message> METADATA = new StringMessageMetaData();
 
-    private final String name;
+    private final String protocol;
     private final String message;
 
-    public StringMessage(String name, String message) {
-        this.name = name;
+    public StringMessage(String protocol, String message) {
+        this.protocol = protocol;
         this.message = message;
     }
 
     @Override
-    public String getName() {
-        return name;
+    public String getProtocol() {
+        return protocol;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class StringMessage implements Message, Cloneable {
     @Override
     public String toString() {
         return "StringMessage{" +
-                "name='" + name + '\'' +
+                "protocol='" + protocol + '\'' +
                 ", message='" + message + '\'' +
                 '}';
     }

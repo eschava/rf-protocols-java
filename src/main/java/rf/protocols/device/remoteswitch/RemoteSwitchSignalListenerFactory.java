@@ -23,7 +23,7 @@ public class RemoteSwitchSignalListenerFactory
     @Override
     public RemoteSwitchSignalListener createListener(MessageListener messageListener) {
         MessageFactoryPacketListener<BitPacket, StringMessage> packetListener =
-                new MessageFactoryPacketListener<BitPacket, StringMessage>(new StringMessageFactory<BitPacket>(getName()), messageListener);
+                new MessageFactoryPacketListener<BitPacket, StringMessage>(new StringMessageFactory<BitPacket>(getProtocol()), messageListener);
         return createListener(packetListener);
     }
 

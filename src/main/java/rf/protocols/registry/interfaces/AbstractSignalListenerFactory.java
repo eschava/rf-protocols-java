@@ -10,17 +10,17 @@ import rf.protocols.core.SignalListenerProperties;
 public abstract class AbstractSignalListenerFactory<Factory extends SignalListenerFactory, Props extends SignalListenerProperties>
         implements SignalListenerFactory<Factory>, Cloneable {
 
-    private String name;
+    private String protocol;
     private Props properties;
 
-    public AbstractSignalListenerFactory(String name, Props properties) {
-        this.name = name;
+    public AbstractSignalListenerFactory(String protocol, Props properties) {
+        this.protocol = protocol;
         this.properties = properties;
     }
 
     @Override
-    public String getName() {
-        return name;
+    public String getProtocol() {
+        return protocol;
     }
 
     public Props getProperties() {
@@ -33,10 +33,10 @@ public abstract class AbstractSignalListenerFactory<Factory extends SignalListen
     }
 
     @Override
-    public Factory clone(String newName) {
+    public Factory clone(String newProtocolName) {
         try {
             AbstractSignalListenerFactory clone = (AbstractSignalListenerFactory) super.clone();
-            clone.name = newName;
+            clone.protocol = newProtocolName;
             clone.properties = properties.clone();
             return (Factory) clone;
         } catch (CloneNotSupportedException e) {

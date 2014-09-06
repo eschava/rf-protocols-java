@@ -12,12 +12,12 @@ import rf.protocols.core.message.TemperatureMessage;
 public class OregonSL109Message extends AbstractMessage<BitPacket>
         implements TemperatureMessage, HumidityMessage {
 
-    public static final String NAME = "OregonSL109";
+    public static final String PROTOCOL = "OregonSL109";
 
     private static final MessageMetaData METADATA = new OregonSL109MessageMetaData();
 
     public OregonSL109Message(BitPacket packet) {
-        super(NAME, packet);
+        super(PROTOCOL, packet);
     }
 
     @Override

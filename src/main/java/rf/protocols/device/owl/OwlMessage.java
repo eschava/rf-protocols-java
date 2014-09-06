@@ -8,12 +8,12 @@ import rf.protocols.core.impl.AbstractMessage;
  * @author Eugene Schava <eschava@gmail.com>
  */
 public class OwlMessage extends AbstractMessage<BitPacket> {
-    public static final String NAME = "Owl";
+    public static final String PROTOCOL = "Owl";
 
     private static final MessageMetaData METADATA = new OwlMessageMetaData();
 
     public OwlMessage(BitPacket packet) {
-        super(NAME, packet);
+        super(PROTOCOL, packet);
     }
 
     @Override

@@ -51,8 +51,8 @@ public class SignalListenerRegistry {
     }
 
     private <F extends SignalListenerFactory> void registerFactory(F listenerFactory, Map<String, F> map) {
-        factoryNames.add(listenerFactory.getName());
-        map.put(listenerFactory.getName(), listenerFactory);
+        factoryNames.add(listenerFactory.getProtocol());
+        map.put(listenerFactory.getProtocol(), listenerFactory);
     }
 
 

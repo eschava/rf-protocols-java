@@ -6,7 +6,7 @@ package rf.protocols.core;
  * @author Eugene Schava <eschava@gmail.com>
  */
 public interface Message {
-    String getName();
+    String getProtocol();
 
     MessageMetaData<? extends Message> getMetaData();
 

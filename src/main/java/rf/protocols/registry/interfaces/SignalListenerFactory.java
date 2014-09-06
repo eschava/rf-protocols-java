@@ -6,9 +6,9 @@ package rf.protocols.registry.interfaces;
  * @author Eugene Schava <eschava@gmail.com>
  */
 public interface SignalListenerFactory<Factory extends SignalListenerFactory> {
-    String getName();
+    String getProtocol();
 
     void setProperty(String property, String value);
 
-    Factory clone(String newName);
+    Factory clone(String newProtocolName);
 }

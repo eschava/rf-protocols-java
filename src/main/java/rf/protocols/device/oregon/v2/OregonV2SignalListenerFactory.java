@@ -15,12 +15,12 @@ public class OregonV2SignalListenerFactory
         implements SignalLengthListenerFactory {
 
     public OregonV2SignalListenerFactory() {
-        super(OregonV2Message.NAME, new OregonV2SignalListenerProperties());
+        super(OregonV2Message.PROTOCOL, new OregonV2SignalListenerProperties());
     }
 
     @Override
     public OregonV2SignalListener createListener(MessageListener messageListener) {
-        PacketListener<BitPacket> packetListener = new MessageFactoryPacketListener<BitPacket, OregonV2Message>(new OregonV2MessageFactory(getName()), messageListener);
+        PacketListener<BitPacket> packetListener = new MessageFactoryPacketListener<BitPacket, OregonV2Message>(new OregonV2MessageFactory(getProtocol()), messageListener);
         return createListener(packetListener);
     }
 

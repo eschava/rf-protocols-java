@@ -17,12 +17,12 @@ public class OwlSignalListenerFactory
         implements SignalLengthListenerFactory {
 
     public OwlSignalListenerFactory() {
-        super(OwlMessage.NAME, new OregonV3SignalListenerProperties());
+        super(OwlMessage.PROTOCOL, new OregonV3SignalListenerProperties());
     }
 
     @Override
     public OregonV3SignalListener createListener(MessageListener messageListener) {
-        PacketListener<BitPacket> packetListener = new MessageFactoryPacketListener<BitPacket, OwlMessage>(new OwlMessageFactory(getName()), messageListener);
+        PacketListener<BitPacket> packetListener = new MessageFactoryPacketListener<BitPacket, OwlMessage>(new OwlMessageFactory(getProtocol()), messageListener);
         return createListener(packetListener);
     }
 

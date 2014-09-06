@@ -16,7 +16,7 @@ public class OregonSL109MessageFactory implements MessageFactory<BitPacket, Oreg
     @Override
     public OregonSL109Message createMessage(BitPacket packet) {
         OregonSL109Message message = new OregonSL109Message(packet);
-        message.setName(name);
+        message.setProtocol(name);
         return message;
     }
 }

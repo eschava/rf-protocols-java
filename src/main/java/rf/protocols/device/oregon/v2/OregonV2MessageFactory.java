@@ -16,7 +16,7 @@ public class OregonV2MessageFactory implements MessageFactory<BitPacket, OregonV
     @Override
     public OregonV2Message createMessage(BitPacket packet) {
         OregonV2Message message = new OregonV2Message(packet);
-        message.setName(name);
+        message.setProtocol(name);
         return message;
     }
 }

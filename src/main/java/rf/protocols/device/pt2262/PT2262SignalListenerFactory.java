@@ -22,7 +22,7 @@ public class PT2262SignalListenerFactory
 
     @Override
     public PT2262SignalListener createListener(MessageListener messageListener) {
-        MessageFactoryPacketListener<BitPacket, StringMessage> packetListener = new MessageFactoryPacketListener<BitPacket, StringMessage>(new StringMessageFactory(getName()), messageListener);
+        MessageFactoryPacketListener<BitPacket, StringMessage> packetListener = new MessageFactoryPacketListener<BitPacket, StringMessage>(new StringMessageFactory(getProtocol()), messageListener);
         return createListener(packetListener);
     }
 
