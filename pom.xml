@@ -29,6 +29,12 @@
                 <updatePolicy>always</updatePolicy>
             </snapshots>
         </repository>
+
+        <repository>
+            <id>repo.eclipse.org</id>
+            <name>Paho Repository - Releases</name>
+            <url>https://repo.eclipse.org/content/repositories/paho-releases/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -45,6 +51,20 @@
             <version>0.1.0</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/bulldog.cubieboard.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.paho</groupId>
+            <artifactId>mqtt-client</artifactId>
+            <version>0.4.0</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>ST4</artifactId>
+            <version>4.0.8</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
