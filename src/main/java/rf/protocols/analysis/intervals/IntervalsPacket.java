@@ -8,11 +8,11 @@ import java.util.List;
 /**
  * @author Eugene Schava <eschava@gmail.com>
  */
-public class IntervalsPacket implements Packet {
+public class IntervalsPacket implements Packet, Cloneable {
 
     private long beforePacketLength;
     private long afterPacketLength;
-    private List<String> intervals = new ArrayList<String>();
+    private List<Long> lengths = new ArrayList<Long>();
 
     public IntervalsPacket() {
         clear();
@@ -20,7 +20,7 @@ public class IntervalsPacket implements Packet {
 
     public void clear() {
         beforePacketLength = afterPacketLength = -1;
-        intervals.clear();
+        lengths.clear();
     }
 
     public void setBeforePacketLength(long beforePacketLength) {
@@ -31,8 +31,8 @@ public class IntervalsPacket implements Packet {
         this.afterPacketLength = afterPacketLength;
     }
 
-    public void addInterval(String interval) {
-        intervals.add(interval);
+    public void addLength(long length) {
+        lengths.add(length);
     }
 
     public long getBeforePacketLength() {
@@ -43,12 +43,18 @@ public class IntervalsPacket implements Packet {
         return afterPacketLength;
     }
 
-    public List<String> getIntervals() {
-        return intervals;
+    public List<Long> getLengths() {
+        return lengths;
     }
 
     @Override
-    public Packet clone() {
-        throw new UnsupportedOperationException();
+    public IntervalsPacket clone() {
+        try {
+            IntervalsPacket clone = (IntervalsPacket) super.clone();
+            clone.lengths = new ArrayList<Long>(lengths);
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

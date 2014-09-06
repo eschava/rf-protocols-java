@@ -12,6 +12,8 @@ import rf.protocols.core.SignalLevelListener;
 import rf.protocols.core.impl.SignalLengthAdapterLevelListener;
 
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @author Eugene Schava <eschava@gmail.com>
@@ -20,6 +22,7 @@ public class IntervalsMain {
 
     public static void main(String[] args) throws InterruptedException {
         final IntervalsSignalListenerProperties properties = new IntervalsSignalListenerProperties();
+        final ExecutorService printService = Executors.newSingleThreadExecutor();
 
         // load listener properties from -Dlistener.PROP parameters
         Properties props = System.getProperties();
@@ -33,8 +36,15 @@ public class IntervalsMain {
 
         IntervalsSignalListener intervalSignalListener = new IntervalsSignalListener(new PacketListener<IntervalsPacket>() {
             @Override
-            public void onPacket(IntervalsPacket packet) {
-                printPacket(properties, packet);
+            public void onPacket(final IntervalsPacket packet) {
+                final IntervalsPacket clone = packet.clone();
+
+                printService.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        printPacket(properties, clone);
+                    }
+                });
             }
         });
         intervalSignalListener.setProperties(properties);
@@ -71,7 +81,11 @@ public class IntervalsMain {
             readingThread.start();
         }
 
-        Thread.sleep(1000 * 1000 * 1000l);
+        synchronized(IntervalsMain.class) {
+            while (true) {
+                IntervalsMain.class.wait();
+            }
+        }
     }
 
     private static void printPacket(IntervalsSignalListenerProperties properties, IntervalsPacket packet) {
@@ -80,7 +94,7 @@ public class IntervalsMain {
         System.out.print("]");
 
         boolean isFirst = true;
-        for (String intervalName : packet.getIntervals()) {
+        for (long length : packet.getLengths()) {
             // separator
             if (properties.namesSeparator != null) {
                 if (!isFirst)
@@ -89,7 +103,7 @@ public class IntervalsMain {
                     isFirst = false;
             }
 
-            System.out.print(intervalName);
+            System.out.print(properties.getIntervalName(length));
         }
 
         System.out.print("[");
@@ -97,7 +111,7 @@ public class IntervalsMain {
         System.out.print("]");
 
         System.out.print(" (");
-        System.out.print(packet.getIntervals().size());
+        System.out.print(packet.getLengths().size());
         System.out.print(")");
 
         System.out.println();

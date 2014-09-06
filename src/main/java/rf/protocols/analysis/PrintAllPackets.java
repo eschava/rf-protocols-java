@@ -5,12 +5,12 @@ import org.bulldog.core.gpio.Pin;
 import org.bulldog.core.platform.Board;
 import org.bulldog.core.platform.Platform;
 import org.bulldog.cubieboard.Cubieboard;
-import rf.protocols.external.bulldog.BulldogInterruptListener;
 import rf.protocols.core.Packet;
 import rf.protocols.core.PacketListener;
-import rf.protocols.registry.SignalListenerRegistry;
 import rf.protocols.core.SignalLevelListener;
 import rf.protocols.core.impl.SignalLevelListenerGroup;
+import rf.protocols.external.bulldog.BulldogInterruptListener;
+import rf.protocols.registry.SignalListenerRegistry;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -78,6 +78,10 @@ public class PrintAllPackets {
         input.enableInterrupts();
         input.addInterruptListener(new BulldogInterruptListener(listenerGroup));
 
-        Thread.sleep(1000 * 1000 * 1000l);
+        synchronized(PrintAllPackets.class) {
+            while (true) {
+                PrintAllPackets.class.wait();
+            }
+        }
     }
 }
