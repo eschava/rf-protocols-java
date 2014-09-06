@@ -1,20 +1,15 @@
 package rf.protocols.analysis;
 
-import org.bulldog.core.pinfeatures.DigitalInput;
-import org.bulldog.core.pinfeatures.Pin;
-import org.bulldog.core.platform.Board;
-import org.bulldog.core.platform.Platform;
-import org.bulldog.cubieboard.Cubieboard;
 import rf.protocols.core.Message;
 import rf.protocols.core.MessageListener;
 import rf.protocols.core.SignalLevelListener;
-import rf.protocols.external.bulldog.BulldogInterruptListener;
+import rf.protocols.core.impl.AbstractProperties;
+import rf.protocols.external.Adapter;
+import rf.protocols.registry.AdapterRegistry;
 import rf.protocols.registry.SignalListenerRegistry;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -25,22 +20,12 @@ public class PrintAllMessages {
     public static void main(String[] args) throws InterruptedException, IOException {
         SignalListenerRegistry registry = SignalListenerRegistry.getInstance();
         final ExecutorService printService = Executors.newSingleThreadExecutor();
+        Properties properties = new Properties();
 
+        // load properties
         String propertiesFile = System.getProperty("propertiesFile");
-        if (propertiesFile != null) {
-            Properties props = new Properties();
-            props.load(new FileInputStream(propertiesFile));
-
-            for (String key : props.stringPropertyNames())
-            {
-                String[] parts = key.split("\\.", 2);
-                String protocol = parts[0];
-                String name = parts[1];
-                String value = props.getProperty(key);
-
-                registry.setProtocolProperty(protocol, name, value);
-            }
-        }
+        if (propertiesFile != null)
+            properties.loadFromFile(propertiesFile);
 
         Collection<String> protocolNames = registry.getProtocolNames();
         MessageListener<? extends Message> messageListener = new MessageListener<Message>() {
@@ -57,16 +42,39 @@ public class PrintAllMessages {
         };
         SignalLevelListener signalLevelListener = registry.createListener(messageListener, protocolNames);
 
-        Board board = Platform.createBoard();
-        // TODO: pins should be moved to configuration
-        Pin pin = ((Cubieboard) board).createDigitalIOPin("PI14", 68, "I", 14, "68_pi14", true);
-        board.getPins().add(pin);
-
-        DigitalInput input = board.getPin("PI14").as(DigitalInput.class);
-        input.setInterruptDebounceMs(-1);
-        input.enableInterrupts();
-        input.addInterruptListener(new BulldogInterruptListener(signalLevelListener));
+        Adapter adapter = AdapterRegistry.getInstance().getAdapter(properties.adapter);
+        adapter.addListener(properties.pin, signalLevelListener);
 
         Thread.sleep(Long.MAX_VALUE);
+    }
+
+    public static class Properties extends AbstractProperties {
+        public String adapter;
+        public String pin;
+
+        @Override
+        protected void loadFromProperties(java.util.Properties props) {
+            adapter = props.getProperty("adapter");
+            super.loadFromProperties(props);
+        }
+
+        @Override
+        public void setProperty(String name, String value) {
+            if (!name.contains(".")) {
+                super.setProperty(name, value);
+                return;
+            }
+
+            String[] parts = name.split("\\.", 2);
+            String protocol = parts[0];
+            name = parts[1];
+
+            if (protocol.equals("adapter")) {
+                Adapter adptr = AdapterRegistry.getInstance().getAdapter(adapter);
+                adptr.setProperty(name, value);
+            } else {
+                SignalListenerRegistry.getInstance().setProtocolProperty(protocol, name, value);
+            }
+        }
     }
 }

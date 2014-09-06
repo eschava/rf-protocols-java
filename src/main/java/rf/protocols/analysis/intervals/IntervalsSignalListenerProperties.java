@@ -1,6 +1,10 @@
 package rf.protocols.analysis.intervals;
 
 import rf.protocols.core.impl.AbstractProperties;
+import rf.protocols.external.Adapter;
+import rf.protocols.registry.AdapterRegistry;
+
+import java.util.Properties;
 
 /**
  * @author Eugene Schava <eschava@gmail.com>
@@ -15,7 +19,9 @@ public class IntervalsSignalListenerProperties extends AbstractProperties {
     public Interval interval4 = new Interval(-1, -1, null);
 
     public String namesSeparator = null;
-    public boolean useInterrupts = true;
+
+    public String adapter;
+    public String pin;
 
     public boolean isObservableInterval(long l) {
         return interval0.isInside(l) ||
@@ -32,6 +38,21 @@ public class IntervalsSignalListenerProperties extends AbstractProperties {
         if (interval3.isInside(l)) return interval3.getName(l);
         if (interval4.isInside(l)) return interval4.getName(l);
         return null;
+    }
+
+    @Override
+    protected void loadFromProperties(Properties props) {
+        adapter = props.getProperty("adapter");
+        super.loadFromProperties(props);
+    }
+    @Override
+    public void setProperty(String name, String value) {
+        if (name.startsWith("adapter.")) {
+            Adapter adptr = AdapterRegistry.getInstance().getAdapter(adapter);
+            adptr.setProperty(name.substring("adapter.".length()), value);
+        } else {
+            super.setProperty(name, value);
+        }
     }
 
     public static class Interval extends rf.protocols.core.Interval {

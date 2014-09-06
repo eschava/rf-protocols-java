@@ -1,6 +1,10 @@
 package rf.protocols.analysis.breakdown;
 
 import rf.protocols.core.impl.AbstractProperties;
+import rf.protocols.external.Adapter;
+import rf.protocols.registry.AdapterRegistry;
+
+import java.util.Properties;
 
 /**
  * @author Eugene Schava <eschava@gmail.com>
@@ -10,4 +14,23 @@ public class BreakdownSignalListenerProperties extends AbstractProperties {
     public int minLength = 0;
     public int maxLength = 10000;
     public int groupCount = 10;
+
+    public String adapter;
+    public String pin;
+
+    @Override
+    protected void loadFromProperties(Properties props) {
+        adapter = props.getProperty("adapter");
+        super.loadFromProperties(props);
+    }
+
+    @Override
+    public void setProperty(String name, String value) {
+        if (name.startsWith("adapter.")) {
+            Adapter adptr = AdapterRegistry.getInstance().getAdapter(adapter);
+            adptr.setProperty(name.substring("adapter.".length()), value);
+        } else {
+            super.setProperty(name, value);
+        }
+    }
 }

@@ -1,11 +1,5 @@
 package rf.protocols.external.paho;
 
-import org.bulldog.core.pinfeatures.DigitalInput;
-import org.bulldog.core.pinfeatures.DigitalOutput;
-import org.bulldog.core.pinfeatures.Pin;
-import org.bulldog.core.platform.Board;
-import org.bulldog.core.platform.Platform;
-import org.bulldog.cubieboard.Cubieboard;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -13,15 +7,13 @@ import rf.protocols.core.Message;
 import rf.protocols.core.MessageListener;
 import rf.protocols.core.SignalLengthSender;
 import rf.protocols.core.SignalLevelListener;
-import rf.protocols.external.bulldog.BulldogInterruptListener;
-import rf.protocols.external.bulldog.BulldogSignalSender;
+import rf.protocols.external.Adapter;
+import rf.protocols.registry.AdapterRegistry;
 import rf.protocols.registry.SignalListenerRegistry;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -34,25 +26,8 @@ public class MqttMain {
         MqttProperties properties = new MqttProperties();
 
         String propertiesFile = System.getProperty("propertiesFile");
-        if (propertiesFile != null) {
-            Properties props = new Properties();
-            props.load(new FileInputStream(propertiesFile));
-
-            for (String key : props.stringPropertyNames())
-            {
-                String value = props.getProperty(key);
-                String[] parts = key.split("\\.", 2);
-
-                if (parts.length == 1) {
-                    properties.setProperty(key, value);
-                } else {
-                    String protocol = parts[0];
-                    String name = parts[1];
-
-                    listenerRegistry.setProtocolProperty(protocol, name, value);
-                }
-            }
-        }
+        if (propertiesFile != null)
+            properties.loadFromFile(propertiesFile);
 
         MqttClient mqttClient = new MqttClient(properties.mqttUrl, properties.mqttClientId);
         MqttConnectOptions mqttConnectOptions = new MqttConnectOptions();
@@ -77,25 +52,15 @@ public class MqttMain {
             }
         };
 
+        Adapter adapter = AdapterRegistry.getInstance().getAdapter(properties.adapter);
+
         Collection<String> protocolNames = properties.protocolNames.equals("all")
                 ? listenerRegistry.getProtocolNames()
                 : Arrays.asList(properties.protocolNames.split(","));
         SignalLevelListener signalListener = listenerRegistry.createListener(messageListener, protocolNames);
+        adapter.addListener(properties.inputPin, signalListener);
 
-        Board board = Platform.createBoard();
-        // TODO: pins should be moved to configuration
-        Pin pin = ((Cubieboard) board).createDigitalIOPin("PI14", 68, "I", 14, "68_pi14", true);
-        board.getPins().add(pin);
-
-        DigitalInput input = board.getPin("PI14").as(DigitalInput.class);
-        input.setInterruptDebounceMs(-1); // TODO: remove with new version of libbuldog
-        input.enableInterrupts();
-        input.addInterruptListener(new BulldogInterruptListener(signalListener));
-
-        // TODO: pins should be moved to configuration
-        DigitalOutput output = board.getPin("PG2").as(DigitalOutput.class);
-        SignalLengthSender signalSender = new BulldogSignalSender(output);
-
+        SignalLengthSender signalSender = adapter.getSignalSender(properties.outputPin);
         mqttClient.setCallback(new PahoMessageCallback(mqttClient.log, signalSender, properties.receiveTopicTemplate));
         mqttClient.subscribe(properties.receiveTopicTemplate);
 

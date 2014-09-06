@@ -1,17 +1,10 @@
 package rf.protocols.analysis.intervals;
 
-import org.bulldog.core.Signal;
-import org.bulldog.core.pinfeatures.DigitalInput;
-import org.bulldog.core.pinfeatures.Pin;
-import org.bulldog.core.platform.Board;
-import org.bulldog.core.platform.Platform;
-import org.bulldog.cubieboard.Cubieboard;
 import rf.protocols.core.PacketListener;
-import rf.protocols.core.SignalLevelListener;
-import rf.protocols.core.impl.SignalLengthAdapterLevelListener;
-import rf.protocols.external.bulldog.BulldogInterruptListener;
+import rf.protocols.external.Adapter;
+import rf.protocols.registry.AdapterRegistry;
 
-import java.util.Properties;
+import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -20,19 +13,14 @@ import java.util.concurrent.Executors;
  */
 public class IntervalsMain {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, IOException {
         final IntervalsSignalListenerProperties properties = new IntervalsSignalListenerProperties();
         final ExecutorService printService = Executors.newSingleThreadExecutor();
 
-        // load listener properties from -Dlistener.PROP parameters
-        Properties props = System.getProperties();
-        for (Object keyObj : props.keySet()) {
-            String key = keyObj.toString();
-            if (key.startsWith("listener.")) {
-                String prop = key.substring("listener.".length());
-                properties.setProperty(prop, props.getProperty(key));
-            }
-        }
+        // load properties
+        String propertiesFile = System.getProperty("propertiesFile");
+        if (propertiesFile != null)
+            properties.loadFromFile(propertiesFile);
 
         IntervalsSignalListener intervalSignalListener = new IntervalsSignalListener(new PacketListener<IntervalsPacket>() {
             @Override
@@ -48,38 +36,10 @@ public class IntervalsMain {
             }
         });
         intervalSignalListener.setProperties(properties);
-
-        final SignalLevelListener signalListener = new SignalLengthAdapterLevelListener(intervalSignalListener);
-
-        Board board = Platform.createBoard();
-        // TODO: pins should be moved to configuration
-        final Pin pin = ((Cubieboard) board).createDigitalIOPin("PI14", 68, "I", 14, "68_pi14", true);
-        board.getPins().add(pin);
-
-        final DigitalInput input = board.getPin("PI14").as(DigitalInput.class);
-        input.setInterruptDebounceMs(-1);
         intervalSignalListener.start();
 
-        if (properties.useInterrupts) {
-            input.enableInterrupts();
-            input.addInterruptListener(new BulldogInterruptListener(signalListener));
-        } else {
-            Thread readingThread = new Thread() {
-                @Override
-                public void run() {
-                    Signal oldValue = null;
-                    while (true) {
-                        Signal value = input.read();
-                        if (value != oldValue) {
-                            signalListener.onSignal(value.getBooleanValue());
-                            oldValue = value;
-                        }
-                    }
-                }
-            };
-            readingThread.setDaemon(true);
-            readingThread.start();
-        }
+        Adapter adapter = AdapterRegistry.getInstance().getAdapter(properties.adapter);
+        adapter.addListener(properties.pin, intervalSignalListener);
 
         Thread.sleep(Long.MAX_VALUE);
     }
