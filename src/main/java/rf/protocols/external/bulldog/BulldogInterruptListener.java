@@ -1,8 +1,8 @@
 package rf.protocols.external.bulldog;
 
 import org.bulldog.core.Edge;
-import org.bulldog.core.gpio.event.InterruptEventArgs;
-import org.bulldog.core.gpio.event.InterruptListener;
+import org.bulldog.core.pinfeatures.event.InterruptEventArgs;
+import org.bulldog.core.pinfeatures.event.InterruptListener;
 import rf.protocols.core.SignalLevelListener;
 
 /**

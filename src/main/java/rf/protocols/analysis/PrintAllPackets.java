@@ -1,7 +1,7 @@
 package rf.protocols.analysis;
 
-import org.bulldog.core.gpio.DigitalInput;
-import org.bulldog.core.gpio.Pin;
+import org.bulldog.core.pinfeatures.DigitalInput;
+import org.bulldog.core.pinfeatures.Pin;
 import org.bulldog.core.platform.Board;
 import org.bulldog.core.platform.Platform;
 import org.bulldog.cubieboard.Cubieboard;

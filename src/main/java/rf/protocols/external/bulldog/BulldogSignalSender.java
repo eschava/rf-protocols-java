@@ -1,8 +1,8 @@
 package rf.protocols.external.bulldog;
 
 import org.bulldog.core.Signal;
-import org.bulldog.core.gpio.DigitalOutput;
-import org.bulldog.core.util.BulldogUtil;
+import org.bulldog.core.pinfeatures.DigitalOutput;
+import org.bulldog.linux.jni.NativeTools;
 import rf.protocols.core.SignalLengthSender;
 
 /**
@@ -21,17 +21,8 @@ public class BulldogSignalSender implements SignalLengthSender {
 
         output.write(Signal.fromBooleanValue(high));
 
-        try {
-            long leftNanos = endTime - System.nanoTime();
-            if (leftNanos >= 1000000) {
-                Thread.sleep(leftNanos / 1000000);
-                leftNanos = endTime - System.nanoTime();
-            }
-
-            if (leftNanos > 0)
-                BulldogUtil.sleepNs((int) leftNanos);
-//                Thread.sleep(0, (int) leftNanos); // works incorrect
-        } catch (InterruptedException ignored) {
-        }
+        int microsLeft = (int) ((endTime - System.nanoTime()) / 1000);
+        if (microsLeft > 0)
+            NativeTools.sleepMicros(microsLeft);
     }
 }

@@ -1,14 +1,14 @@
 package rf.protocols.analysis.breakdown;
 
-import org.bulldog.core.gpio.DigitalInput;
-import org.bulldog.core.gpio.Pin;
+import org.bulldog.core.pinfeatures.DigitalInput;
+import org.bulldog.core.pinfeatures.Pin;
 import org.bulldog.core.platform.Board;
 import org.bulldog.core.platform.Platform;
 import org.bulldog.cubieboard.Cubieboard;
-import rf.protocols.external.bulldog.BulldogInterruptListener;
 import rf.protocols.core.PacketListener;
 import rf.protocols.core.SignalLevelListener;
 import rf.protocols.core.impl.SignalLengthAdapterLevelListener;
+import rf.protocols.external.bulldog.BulldogInterruptListener;
 
 import java.util.Properties;
 

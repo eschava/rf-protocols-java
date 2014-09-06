@@ -1,10 +1,10 @@
 package rf.protocols.analysis;
 
-import org.bulldog.core.gpio.DigitalOutput;
+import org.bulldog.core.pinfeatures.DigitalOutput;
 import org.bulldog.core.platform.Board;
 import org.bulldog.core.platform.Platform;
-import rf.protocols.external.bulldog.BulldogSignalSender;
 import rf.protocols.core.SignalLengthSender;
+import rf.protocols.external.bulldog.BulldogSignalSender;
 import rf.protocols.registry.StringMessageSenderRegistry;
 
 /**
