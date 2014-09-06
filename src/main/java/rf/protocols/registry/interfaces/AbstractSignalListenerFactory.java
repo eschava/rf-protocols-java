@@ -1,13 +1,13 @@
 package rf.protocols.registry.interfaces;
 
-import rf.protocols.core.SignalListenerProperties;
+import rf.protocols.core.Properties;
 
 /**
  * Helper implementation of {@link SignalListenerFactory}
  *
  * @author Eugene Schava <eschava@gmail.com>
  */
-public abstract class AbstractSignalListenerFactory<Factory extends SignalListenerFactory, Props extends SignalListenerProperties>
+public abstract class AbstractSignalListenerFactory<Factory extends SignalListenerFactory, Props extends Properties>
         implements SignalListenerFactory<Factory>, Cloneable {
 
     private String protocol;

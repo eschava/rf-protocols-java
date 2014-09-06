@@ -1,14 +1,14 @@
 package rf.protocols.core;
 
 import org.junit.Test;
-import rf.protocols.core.impl.AbstractSignalListenerProperties;
+import rf.protocols.core.impl.AbstractProperties;
 
 import static junit.framework.TestCase.assertEquals;
 
 /**
  * @author Eugene Schava <eschava@gmail.com>
  */
-public class PropertiesListenerTest {
+public class PropertiesTest {
     @Test
     public void test() throws Exception {
         Properties props = new Properties();
@@ -24,7 +24,7 @@ public class PropertiesListenerTest {
         assertEquals(24, props.interval.getMin());
     }
 
-    public static class Properties extends AbstractSignalListenerProperties {
+    public static class Properties extends AbstractProperties {
         public int prop1 = 10;
         public Interval interval = new Interval(20, 30);
     }

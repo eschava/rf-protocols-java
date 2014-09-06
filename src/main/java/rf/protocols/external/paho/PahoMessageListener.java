@@ -10,8 +10,6 @@ import rf.protocols.core.MessageMetaData;
 import java.util.Collection;
 
 /**
- * TODO: add description
- *
  * @author Eugene Schava <eschava@gmail.com>
  */
 public class PahoMessageListener implements MessageListener<Message> {

@@ -1,11 +1,11 @@
 package rf.protocols.device.remoteswitch;
 
-import rf.protocols.core.impl.AbstractSignalListenerProperties;
+import rf.protocols.core.impl.AbstractProperties;
 
 /**
  * @author Eugene Schava <eschava@gmail.com>
  */
-public class RemoteSwitchSignalListenerProperties extends AbstractSignalListenerProperties {
+public class RemoteSwitchSignalListenerProperties extends AbstractProperties {
     public int packetSize = 12; // in trits
 
     public long minSeparatorLength = 3720;

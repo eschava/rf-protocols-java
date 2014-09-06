@@ -81,11 +81,7 @@ public class IntervalsMain {
             readingThread.start();
         }
 
-        synchronized(IntervalsMain.class) {
-            while (true) {
-                IntervalsMain.class.wait();
-            }
-        }
+        Thread.sleep(Long.MAX_VALUE);
     }
 
     private static void printPacket(IntervalsSignalListenerProperties properties, IntervalsPacket packet) {

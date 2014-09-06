@@ -1,11 +1,11 @@
 package rf.protocols.device.pt2262;
 
-import rf.protocols.core.impl.AbstractSignalListenerProperties;
+import rf.protocols.core.impl.AbstractProperties;
 
 /**
  * @author Eugene Schava <eschava@gmail.com>
  */
-public class PT2262SignalListenerProperties extends AbstractSignalListenerProperties {
+public class PT2262SignalListenerProperties extends AbstractProperties {
     public int minPacketSize = 4;
 
     public long minSeparatorLength = 5000;

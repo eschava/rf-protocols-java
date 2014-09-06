@@ -1,12 +1,12 @@
 package rf.protocols.device.oregon.sl109;
 
 import rf.protocols.core.Interval;
-import rf.protocols.core.impl.AbstractSignalListenerProperties;
+import rf.protocols.core.impl.AbstractProperties;
 
 /**
  * @author Eugene Schava <eschava@gmail.com>
  */
-public class OregonSL109SignalListenerProperties extends AbstractSignalListenerProperties {
+public class OregonSL109SignalListenerProperties extends AbstractProperties {
     // TODO: move to configuration
     public Interval preambuleLength = new Interval(400, 600);
     public Interval zeroLength = new Interval(1600, 2200);

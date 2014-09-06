@@ -8,8 +8,6 @@ import rf.protocols.core.SignalLengthSender;
 import rf.protocols.registry.StringMessageSenderRegistry;
 
 /**
- * TODO: add description
- *
  * @author Eugene Schava <eschava@gmail.com>
  */
 public class PahoMessageCallback implements MqttCallback {

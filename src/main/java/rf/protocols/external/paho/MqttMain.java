@@ -17,30 +17,51 @@ import rf.protocols.external.bulldog.BulldogInterruptListener;
 import rf.protocols.external.bulldog.BulldogSignalSender;
 import rf.protocols.registry.SignalListenerRegistry;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
  * @author Eugene Schava <eschava@gmail.com>
  */
-public class PahoMain {
-    public static void main(String[] args) throws InterruptedException, MqttException {
-        String mqttUrl = System.getProperty("mqttUrl");
-        String mqttClientId = System.getProperty("mqttClientId");
-        String mqttUser = System.getProperty("mqttUser");
-        String mqttPassword = System.getProperty("mqttPassword");
-        String sendTopicTemplate = System.getProperty("sendTopicTemplate");
-        String receiveTopicTemplate = System.getProperty("receiveTopicTemplate");
+public class MqttMain {
+    public static void main(String[] args) throws InterruptedException, MqttException, IOException {
+        SignalListenerRegistry listenerRegistry = SignalListenerRegistry.getInstance();
+        MqttProperties properties = new MqttProperties();
 
-        MqttClient mqttClient = new MqttClient(mqttUrl, mqttClientId);
+        String propertiesFile = System.getProperty("propertiesFile");
+        if (propertiesFile != null) {
+            Properties props = new Properties();
+            props.load(new FileInputStream(propertiesFile));
+
+            for (String key : props.stringPropertyNames())
+            {
+                String value = props.getProperty(key);
+                String[] parts = key.split("\\.", 2);
+
+                if (parts.length == 1) {
+                    properties.setProperty(key, value);
+                } else {
+                    String protocol = parts[0];
+                    String name = parts[1];
+
+                    listenerRegistry.setProtocolProperty(protocol, name, value);
+                }
+            }
+        }
+
+        MqttClient mqttClient = new MqttClient(properties.mqttUrl, properties.mqttClientId);
         MqttConnectOptions mqttConnectOptions = new MqttConnectOptions();
-        mqttConnectOptions.setUserName(mqttUser);
-        if (mqttPassword != null)
-            mqttConnectOptions.setPassword(mqttPassword.toCharArray());
+        mqttConnectOptions.setUserName(properties.mqttUser);
+        if (properties.mqttPassword != null)
+            mqttConnectOptions.setPassword(properties.mqttPassword.toCharArray());
         mqttClient.connect();
 
-        final PahoMessageListener pahoMessageListener = new PahoMessageListener(mqttClient, sendTopicTemplate);
+        final PahoMessageListener pahoMessageListener = new PahoMessageListener(mqttClient, properties.sendTopicTemplate);
         final ExecutorService sendService = Executors.newSingleThreadExecutor();
 
         MessageListener<? extends Message> messageListener = new MessageListener<Message>() {
@@ -56,8 +77,9 @@ public class PahoMain {
             }
         };
 
-        SignalListenerRegistry listenerRegistry = SignalListenerRegistry.getInstance();
-        Collection<String> protocolNames = listenerRegistry.getProtocolNames();
+        Collection<String> protocolNames = properties.protocolNames.equals("all")
+                ? listenerRegistry.getProtocolNames()
+                : Arrays.asList(properties.protocolNames.split(","));
         SignalLevelListener signalListener = listenerRegistry.createListener(messageListener, protocolNames);
 
         Board board = Platform.createBoard();
@@ -74,8 +96,8 @@ public class PahoMain {
         DigitalOutput output = board.getPin("PG2").as(DigitalOutput.class);
         SignalLengthSender signalSender = new BulldogSignalSender(output);
 
-        mqttClient.setCallback(new PahoMessageCallback(mqttClient.log, signalSender, receiveTopicTemplate));
-        mqttClient.subscribe(receiveTopicTemplate);
+        mqttClient.setCallback(new PahoMessageCallback(mqttClient.log, signalSender, properties.receiveTopicTemplate));
+        mqttClient.subscribe(properties.receiveTopicTemplate);
 
         Thread.sleep(Long.MAX_VALUE);
     }

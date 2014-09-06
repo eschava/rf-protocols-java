@@ -1,11 +1,11 @@
 package rf.protocols.analysis.intervals;
 
-import rf.protocols.core.impl.AbstractSignalListenerProperties;
+import rf.protocols.core.impl.AbstractProperties;
 
 /**
  * @author Eugene Schava <eschava@gmail.com>
  */
-public class IntervalsSignalListenerProperties extends AbstractSignalListenerProperties {
+public class IntervalsSignalListenerProperties extends AbstractProperties {
     public int minSize = 10;
 
     public Interval interval0 = new Interval(400, 800, "0");

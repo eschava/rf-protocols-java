@@ -1,11 +1,11 @@
 package rf.protocols.analysis.breakdown;
 
-import rf.protocols.core.impl.AbstractSignalListenerProperties;
+import rf.protocols.core.impl.AbstractProperties;
 
 /**
  * @author Eugene Schava <eschava@gmail.com>
  */
-public class BreakdownSignalListenerProperties extends AbstractSignalListenerProperties {
+public class BreakdownSignalListenerProperties extends AbstractProperties {
     public long period = 1000;
     public int minLength = 0;
     public int maxLength = 10000;

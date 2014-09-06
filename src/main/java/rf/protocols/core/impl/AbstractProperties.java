@@ -1,6 +1,6 @@
 package rf.protocols.core.impl;
 
-import rf.protocols.core.SignalListenerProperties;
+import rf.protocols.core.Properties;
 
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
@@ -8,11 +8,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 /**
- * Helper implementation of {@link rf.protocols.core.SignalListenerProperties}
+ * Helper implementation of {@link rf.protocols.core.Properties}
  *
  * @author Eugene Schava <eschava@gmail.com>
  */
-public class AbstractSignalListenerProperties implements SignalListenerProperties, Cloneable {
+public class AbstractProperties implements Properties, Cloneable {
 
     @Override
     public void setProperty(String name, String value) {
@@ -53,9 +53,9 @@ public class AbstractSignalListenerProperties implements SignalListenerPropertie
     }
 
     @Override
-    public SignalListenerProperties clone() {
+    public Properties clone() {
         try {
-            return (SignalListenerProperties) super.clone();
+            return (Properties) super.clone();
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
         }

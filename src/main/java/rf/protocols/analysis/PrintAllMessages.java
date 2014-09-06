@@ -33,7 +33,7 @@ public class PrintAllMessages {
 
             for (String key : props.stringPropertyNames())
             {
-                String[] parts = key.split(".", 2);
+                String[] parts = key.split("\\.", 2);
                 String protocol = parts[0];
                 String name = parts[1];
                 String value = props.getProperty(key);
@@ -67,10 +67,6 @@ public class PrintAllMessages {
         input.enableInterrupts();
         input.addInterruptListener(new BulldogInterruptListener(signalLevelListener));
 
-        synchronized(PrintAllMessages.class) {
-            while (true) {
-                PrintAllMessages.class.wait();
-            }
-        }
+        Thread.sleep(Long.MAX_VALUE);
     }
 }
