@@ -1,9 +1,6 @@
 package rf.protocols.external.pi4j;
 
-import com.pi4j.io.gpio.GpioController;
-import com.pi4j.io.gpio.GpioFactory;
-import com.pi4j.io.gpio.GpioPinDigitalInput;
-import com.pi4j.io.gpio.Pin;
+import com.pi4j.io.gpio.*;
 import rf.protocols.core.SignalLengthListener;
 import rf.protocols.core.SignalLengthSender;
 import rf.protocols.core.SignalLevelListener;
@@ -34,13 +31,24 @@ public class PI4JAdapter implements Adapter {
     @Override
     public void addListener(String pinName, final SignalLevelListener listener) {
         GpioController controller = GpioFactory.getInstance();
-        Pin pin = null; // TODO: get pin by name
+        Pin pin = getPinByName(pinName);
         GpioPinDigitalInput input = controller.provisionDigitalInputPin(pin);
         input.addListener(new PI4JPinListener(listener));
     }
 
+    private Pin getPinByName(String pinName) {
+        try {
+            return (Pin) RaspiPin.class.getField(pinName).get(null);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @Override
-    public SignalLengthSender getSignalSender(String pin) {
-        throw new UnsupportedOperationException("Not implemented"); // TODO: implement
+    public SignalLengthSender getSignalSender(String pinName) {
+        GpioController controller = GpioFactory.getInstance();
+        Pin pin = getPinByName(pinName);
+        GpioPinDigitalOutput output = controller.provisionDigitalOutputPin(pin);
+        return new PI4JSignalSender(output);
     }
 }
