@@ -29,15 +29,16 @@ public class OregonV2Test {
 
          // custom changes for my THN132N
         signalLengthListener.getProperties().minPreambuleSize = 20;
-        signalLengthListener.getProperties().packetSize = 68;
 
         for (long l : DATA)
-        {
             signalLengthListener.onSignal(false, l);
-        }
+        signalLengthListener.onSignal(false, -1);
 
         OregonV2Message message = messages[0];
         assertEquals("ea4c", message.getDeviceType());
+        assertEquals(1, message.getChannelId());
+        assertEquals(78, message.getRollingId());
+        assertEquals(false, message.isBatteryLow());
         assertEquals(28.3d, message.getTemperature(), 0d);
     }
 
@@ -55,15 +56,17 @@ public class OregonV2Test {
 
          // custom changes for my THN132N
         signalLengthListener.getProperties().minPreambuleSize = 20;
-        signalLengthListener.getProperties().packetSize = 68;
 
         for (byte b : DATA2.getBytes())
-        {
             signalLengthListener.onSignal(false, b == '1' ? 1000 : 500);
-        }
+        signalLengthListener.onSignal(false, -1);
 
         OregonV2Message message = messages[0];
         assertEquals("ea4c", message.getDeviceType());
+        assertEquals(1, message.getChannelId());
+        assertEquals(78, message.getRollingId());
+        assertEquals(false, message.isBatteryLow());
         assertEquals(22.0d, message.getTemperature(), 0d);
+        assertEquals(22.0d, message.getMetaData().getNumericField(message, "Temperature"), 0d);
     }
 }

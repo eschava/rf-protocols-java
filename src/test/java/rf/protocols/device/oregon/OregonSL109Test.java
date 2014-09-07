@@ -23,7 +23,7 @@ public class OregonSL109Test {
         assertEquals(32d, message.getHumidity(), 0d);
         assertEquals(28.2, message.getTemperature(), 0d);
         assertEquals(4, message.getStatus());
-        assertEquals(221, message.getRollingCode());
+        assertEquals(221, message.getRollingId());
     }
 
     @Test
@@ -34,7 +34,7 @@ public class OregonSL109Test {
         assertEquals(34d, message.getHumidity(), 0d);
         assertEquals(26.1, message.getTemperature(), 0d);
         assertEquals(4, message.getStatus());
-        assertEquals(221, message.getRollingCode());
+        assertEquals(221, message.getRollingId());
     }
 
     private OregonSL109Message getMessage(String data) {

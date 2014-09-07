@@ -6,13 +6,12 @@ import rf.protocols.core.impl.SignalLengthListenerGroup;
 import rf.protocols.core.impl.SignalLevelListenerGroup;
 import rf.protocols.device.oregon.sl109.OregonSL109SignalListenerFactory;
 import rf.protocols.device.oregon.v2.OregonV2SignalListenerFactory;
-import rf.protocols.device.oregon.v3.OregonV3SignalListenerFactory;
 import rf.protocols.device.owl.OwlSignalListenerFactory;
 import rf.protocols.device.pt2262.PT2262SignalListenerFactory;
+import rf.protocols.device.remoteswitch.RemoteSwitchSignalListenerFactory;
 import rf.protocols.registry.interfaces.SignalLengthListenerFactory;
 import rf.protocols.registry.interfaces.SignalLevelListenerFactory;
 import rf.protocols.registry.interfaces.SignalListenerFactory;
-import rf.protocols.device.remoteswitch.RemoteSwitchSignalListenerFactory;
 
 import java.util.*;
 
@@ -36,7 +35,7 @@ public class SignalListenerRegistry {
         // register all known factories
         registerFactory(new OregonSL109SignalListenerFactory());
         registerFactory(new OregonV2SignalListenerFactory());
-        registerFactory(new OregonV3SignalListenerFactory());
+//        registerFactory(new OregonV3SignalListenerFactory());
         registerFactory(new OwlSignalListenerFactory());
         registerFactory(new PT2262SignalListenerFactory());
         registerFactory(new RemoteSwitchSignalListenerFactory());

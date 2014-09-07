@@ -1,16 +1,18 @@
 package rf.protocols.device.oregon.sl109;
 
 import rf.protocols.core.MessageMetaData;
-import rf.protocols.core.impl.BitPacket;
 import rf.protocols.core.impl.AbstractMessage;
+import rf.protocols.core.impl.BitPacket;
+import rf.protocols.core.message.ChannelIdMessage;
 import rf.protocols.core.message.HumidityMessage;
+import rf.protocols.core.message.RollingIdMessage;
 import rf.protocols.core.message.TemperatureMessage;
 
 /**
  * @author Eugene Schava <eschava@gmail.com>
  */
 public class OregonSL109Message extends AbstractMessage<BitPacket>
-        implements TemperatureMessage, HumidityMessage {
+        implements ChannelIdMessage, RollingIdMessage, TemperatureMessage, HumidityMessage {
 
     public static final String PROTOCOL = "OregonSL109";
 
@@ -65,7 +67,8 @@ public class OregonSL109Message extends AbstractMessage<BitPacket>
         return packet.getInt(26, 29);
     }
 
-    public int getRollingCode() {
+    @Override
+    public int getRollingId() {
         return packet.getInt(30, 37);
     }
 }

@@ -73,9 +73,8 @@ public class OregonV2SignalListener implements SignalLengthListener {
         }
 
         if (reset) {
-            reset();
-        } else if (packet.getSize() == properties.packetSize) {
-            packetListener.onPacket(packet);
+            if (packet.getSize() >= properties.minPacketSize)
+                packetListener.onPacket(packet);
             reset();
         }
     }
