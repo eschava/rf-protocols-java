@@ -56,7 +56,7 @@ public class OregonSL109Message extends AbstractMessage<BitPacket>
     }
 
     public double getTemperature() {
-        return (256 * packet.getInt(14, 17) + 16 * packet.getInt(18, 21) + packet.getInt(22, 25)) / 10.0d;
+        return packet.getInt(14, 25) / 10.0d;
     }
 
     public double getHumidity() {
