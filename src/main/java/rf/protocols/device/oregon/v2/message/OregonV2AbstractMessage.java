@@ -21,7 +21,7 @@ public abstract class OregonV2AbstractMessage extends AbstractMessage<BitPacket>
 
     @Override
     public boolean isValid() {
-        return /*sync*/ packet.getInt(3, 0) == 10 && isCrcValid();
+        return /*sync*/ packet.getInt(3, 0) == 10 && packet.getSize() >= getMessageSize() && isCrcValid();
     }
 
     public boolean isCrcValid() {
