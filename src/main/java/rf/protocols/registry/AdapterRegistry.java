@@ -13,6 +13,7 @@ import java.util.Map;
 public class AdapterRegistry {
     private static final AdapterRegistry INSTANCE = new AdapterRegistry();
 
+    private final Map<String, Class<? extends Adapter>> adapterClassMap = new HashMap<String, Class<? extends Adapter>>();
     private final Map<String, Adapter> adapterMap = new HashMap<String, Adapter>();
 
     public static AdapterRegistry getInstance() {
@@ -20,15 +21,30 @@ public class AdapterRegistry {
     }
 
     private AdapterRegistry() {
-        registerAdapter(new BulldogAdapter());
-        registerAdapter(new PI4JAdapter());
+        registerAdapter("bulldog", BulldogAdapter.class);
+        registerAdapter("pi4j", PI4JAdapter.class);
     }
 
-    private void registerAdapter(Adapter adapter) {
-        adapterMap.put(adapter.getName(), adapter);
+    private void registerAdapter(String name, Class<? extends Adapter> adapterClass) {
+        adapterClassMap.put(name, adapterClass);
     }
+
+//    private void registerAdapter(Adapter adapter) {
+//        adapterMap.put(adapter.getName(), adapter);
+//    }
 
     public Adapter getAdapter(String name) {
-        return adapterMap.get(name);
+        Adapter adapter = adapterMap.get(name);
+
+        if (adapter == null) {
+            try {
+                Class<? extends Adapter> clazz = adapterClassMap.get(name);
+                adapter = clazz.newInstance();
+                adapterMap.put(name, adapter);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return adapter;
     }
 }

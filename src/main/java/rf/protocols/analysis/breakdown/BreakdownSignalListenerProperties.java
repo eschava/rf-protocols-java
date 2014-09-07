@@ -4,8 +4,6 @@ import rf.protocols.core.impl.AbstractProperties;
 import rf.protocols.external.Adapter;
 import rf.protocols.registry.AdapterRegistry;
 
-import java.util.Properties;
-
 /**
  * @author Eugene Schava <eschava@gmail.com>
  */
@@ -17,12 +15,6 @@ public class BreakdownSignalListenerProperties extends AbstractProperties {
 
     public String adapter;
     public String pin;
-
-    @Override
-    protected void loadFromProperties(Properties props) {
-        adapter = props.getProperty("adapter");
-        super.loadFromProperties(props);
-    }
 
     @Override
     public void setProperty(String name, String value) {

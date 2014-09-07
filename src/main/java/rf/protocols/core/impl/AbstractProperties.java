@@ -18,7 +18,7 @@ public class AbstractProperties implements Properties, Cloneable {
 
     @Override
     public void loadFromFile(String fileName) throws IOException {
-        java.util.Properties props = new java.util.Properties();
+        java.util.Properties props = new LinkedProperties();
         props.load(new FileInputStream(fileName));
 
         loadFromProperties(props);

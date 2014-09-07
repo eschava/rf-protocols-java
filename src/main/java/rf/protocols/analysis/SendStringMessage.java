@@ -34,12 +34,6 @@ public class SendStringMessage {
         public String pin;
 
         @Override
-        protected void loadFromProperties(java.util.Properties props) {
-            adapter = props.getProperty("adapter");
-            super.loadFromProperties(props);
-        }
-
-        @Override
         public void setProperty(String name, String value) {
             if (name.startsWith("adapter.")) {
                 Adapter adptr = AdapterRegistry.getInstance().getAdapter(adapter);

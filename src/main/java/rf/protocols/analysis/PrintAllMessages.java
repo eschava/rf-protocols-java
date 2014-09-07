@@ -53,12 +53,6 @@ public class PrintAllMessages {
         public String pin;
 
         @Override
-        protected void loadFromProperties(java.util.Properties props) {
-            adapter = props.getProperty("adapter");
-            super.loadFromProperties(props);
-        }
-
-        @Override
         public void setProperty(String name, String value) {
             if (!name.contains(".")) {
                 super.setProperty(name, value);
