@@ -63,7 +63,9 @@ public class OregonV2Message extends AbstractMessage<BitPacket>
     }
 
     public double getTemperature() {
-        return packet.getInt(47, 44) * 10 + packet.getInt(43, 40) + packet.getInt(39, 36) / 10d;
+        double abs = packet.getInt(47, 44) * 10 + packet.getInt(43, 40) + packet.getInt(39, 36) / 10d;
+        int sign = packet.getInt(51, 48);
+        return sign == 0 ? abs : -abs;
     }
 
     public double getHumidity() {
