@@ -27,7 +27,7 @@ public class RemoteSwitchPacketSender implements PacketSender<RemoteSwitchPacket
     }
 
     public void send(RemoteSwitchPacket packet, SignalLengthSender signalSender) {
-        String trits = Long.toString(packet.getValue(), 3);
+        String trits = packet.toString();
 
         sendSeparator(signalSender);
 
