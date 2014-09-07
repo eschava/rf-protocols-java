@@ -1,8 +1,5 @@
 package rf.protocols.core;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
 /**
  * Configurable properties of any component
  *
@@ -10,6 +7,5 @@ import java.io.IOException;
  */
 public interface Properties {
     void setProperty(String name, String value);
-    void loadFromFile(String fileName) throws IOException;
     Properties clone();
 }

@@ -16,12 +16,22 @@ import java.lang.reflect.Method;
  */
 public class AbstractProperties implements Properties, Cloneable {
 
-    @Override
     public void loadFromFile(String fileName) throws IOException {
         java.util.Properties props = new LinkedProperties();
         props.load(new FileInputStream(fileName));
 
         loadFromProperties(props);
+    }
+
+    public void loadFromSystemProperties(String prefix) throws IOException {
+        java.util.Properties props = System.getProperties();
+        for (Object keyObj : props.keySet()) {
+            String key = keyObj.toString();
+            if (key.startsWith(prefix)) {
+                String prop = key.substring(prefix.length());
+                setProperty(prop, props.getProperty(key));
+            }
+        }
     }
 
     protected void loadFromProperties(java.util.Properties props) {

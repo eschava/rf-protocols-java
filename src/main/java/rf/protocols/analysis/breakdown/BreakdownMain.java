@@ -18,6 +18,8 @@ public class BreakdownMain {
         String propertiesFile = System.getProperty("propertiesFile");
         if (propertiesFile != null)
             properties.loadFromFile(propertiesFile);
+        // load listener properties from -Dlistener.PROP parameters
+        properties.loadFromSystemProperties("listener.");
 
         BreakdownSignalListener debugGroupsSignalListener = new BreakdownSignalListener(new PacketListener<BreakdownPacket>() {
             @Override

@@ -15,7 +15,6 @@ public class BulldogAdapterProperties extends AbstractProperties {
     public Pin pinToAdd2 = new Pin();
 
     public static class Pin {
-
         public String name;
         public int address;
         public String bank;
