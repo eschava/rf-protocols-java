@@ -28,12 +28,8 @@ public class OregonV2Message extends AbstractMessage<BitPacket>
 
     @Override
     public boolean isValid() {
-        return isCrcValid();
+        return /*sync*/ packet.getInt(3, 0) == 10 && isCrcValid();
     }
-//
-//    public boolean isLengthValid() {
-//        return packet.getSize() == 80;
-//    }
 
     public boolean isCrcValid() {
         return getCheckSum() == calculateCheckSum();
@@ -51,7 +47,7 @@ public class OregonV2Message extends AbstractMessage<BitPacket>
     }
 
     public String getDeviceType() {
-        return Integer.toHexString(packet.getInt(7, 0)) + Integer.toHexString(packet.getInt(15, 8));
+        return packet.getHex(7, 4) + packet.getHex(11, 8) + packet.getHex(15, 12) + packet.getHex(19, 16);
     }
 
     public int getChannelId() {

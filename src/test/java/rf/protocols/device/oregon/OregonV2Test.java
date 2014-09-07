@@ -35,7 +35,7 @@ public class OregonV2Test {
         signalLengthListener.onSignal(false, -1);
 
         OregonV2Message message = messages[0];
-        assertEquals("ea4c", message.getDeviceType());
+        assertEquals("ec40", message.getDeviceType());
         assertEquals(1, message.getChannelId());
         assertEquals(78, message.getRollingId());
         assertEquals(false, message.isBatteryLow());
@@ -62,7 +62,7 @@ public class OregonV2Test {
         signalLengthListener.onSignal(false, -1);
 
         OregonV2Message message = messages[0];
-        assertEquals("ea4c", message.getDeviceType());
+        assertEquals("ec40", message.getDeviceType());
         assertEquals(1, message.getChannelId());
         assertEquals(78, message.getRollingId());
         assertEquals(false, message.isBatteryLow());

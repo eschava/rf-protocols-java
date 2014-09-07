@@ -72,18 +72,23 @@ public class BitPacket implements Packet, Cloneable {
         return result;
     }
 
-//    public String getHex(int fromBit, int toBit) {
-//        // FIXME
-//        StringBuilder sb = new StringBuilder();
-//        int i = fromBit;
-//        while (i != toBit) {
-//            int bits = Math.min(7, toBit - i);
-//            int b = getInt(i, i + bits);
-//            sb.append(Integer.toHexString(b));
-//            i += bits;
-//        }
-//        return sb.toString();
-//    }
+    public String getHex(int fromBit, int toBit) {
+        StringBuilder sb = new StringBuilder();
+
+        if (fromBit <= toBit) {
+            for (int i = fromBit; i <= toBit ; i += 4) {
+                int b = getInt(i, i + 3);
+                sb.append(Integer.toHexString(b));
+            }
+        } else {
+            for (int i = fromBit; i >= toBit ; i -= 4) {
+                int b = getInt(i, i - 3);
+                sb.append(Integer.toHexString(b));
+            }
+        }
+
+        return sb.toString();
+    }
 
     @Override
     public String toString() {
