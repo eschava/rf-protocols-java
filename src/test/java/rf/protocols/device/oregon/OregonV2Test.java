@@ -2,9 +2,13 @@ package rf.protocols.device.oregon;
 
 import org.junit.Test;
 import rf.protocols.core.MessageListener;
-import rf.protocols.device.oregon.v2.OregonV2Message;
+import rf.protocols.core.impl.BitPacket;
+import rf.protocols.device.oregon.v2.OregonV2MessageFactory;
 import rf.protocols.device.oregon.v2.OregonV2SignalListener;
 import rf.protocols.device.oregon.v2.OregonV2SignalListenerFactory;
+import rf.protocols.device.oregon.v2.message.OregonV2AbstractMessage;
+import rf.protocols.device.oregon.v2.message.OregonV2TemperatureHumidityMessage;
+import rf.protocols.device.oregon.v2.message.OregonV2TemperatureMessage;
 
 import static org.junit.Assert.assertEquals;
 
@@ -17,11 +21,11 @@ public class OregonV2Test {
 
     @Test
     public void testSignalListener() throws Exception {
-        final OregonV2Message[] messages = new OregonV2Message[1];
-        MessageListener<OregonV2Message> messageListener = new MessageListener<OregonV2Message>() {
+        final OregonV2TemperatureMessage[] messages = new OregonV2TemperatureMessage[1];
+        MessageListener<OregonV2TemperatureMessage> messageListener = new MessageListener<OregonV2TemperatureMessage>() {
             @Override
-            public void onMessage(OregonV2Message message) {
-                messages[0] = (OregonV2Message) message.clone();
+            public void onMessage(OregonV2TemperatureMessage message) {
+                messages[0] = (OregonV2TemperatureMessage) message.clone();
             }
         };
         OregonV2SignalListenerFactory factory = new OregonV2SignalListenerFactory();
@@ -34,7 +38,7 @@ public class OregonV2Test {
             signalLengthListener.onSignal(false, l);
         signalLengthListener.onSignal(false, -1);
 
-        OregonV2Message message = messages[0];
+        OregonV2TemperatureMessage message = messages[0];
         assertEquals("ec40", message.getDeviceType());
         assertEquals(1, message.getChannelId());
         assertEquals(78, message.getRollingId());
@@ -44,11 +48,11 @@ public class OregonV2Test {
 
     @Test
     public void testSignalListener2() throws Exception {
-        final OregonV2Message[] messages = new OregonV2Message[1];
-        MessageListener<OregonV2Message> messageListener = new MessageListener<OregonV2Message>() {
+        final OregonV2TemperatureMessage[] messages = new OregonV2TemperatureMessage[1];
+        MessageListener<OregonV2TemperatureMessage> messageListener = new MessageListener<OregonV2TemperatureMessage>() {
             @Override
-            public void onMessage(OregonV2Message message) {
-                messages[0] = (OregonV2Message) message.clone();
+            public void onMessage(OregonV2TemperatureMessage message) {
+                messages[0] = (OregonV2TemperatureMessage) message.clone();
             }
         };
         OregonV2SignalListenerFactory factory = new OregonV2SignalListenerFactory();
@@ -61,12 +65,42 @@ public class OregonV2Test {
             signalLengthListener.onSignal(false, b == '1' ? 1000 : 500);
         signalLengthListener.onSignal(false, -1);
 
-        OregonV2Message message = messages[0];
+        OregonV2TemperatureMessage message = messages[0];
         assertEquals("ec40", message.getDeviceType());
         assertEquals(1, message.getChannelId());
         assertEquals(78, message.getRollingId());
         assertEquals(false, message.isBatteryLow());
         assertEquals(22.0d, message.getTemperature(), 0d);
         assertEquals(22.0d, message.getMetaData().getNumericField(message, "Temperature"), 0d);
+    }
+
+    @Test
+    public void testTemperatureHumidityMessage() throws Exception {
+        String data = "1A2D10B6051970A345";
+        OregonV2TemperatureHumidityMessage message = (OregonV2TemperatureHumidityMessage) getMessage(data);
+        assertEquals("1d20", message.getDeviceType());
+        assertEquals(1, message.getChannelId());
+        assertEquals(182, message.getRollingId());
+        assertEquals(true, message.isBatteryLow());
+        assertEquals(19.0d, message.getTemperature(), 0d);
+        assertEquals(19.0d, message.getMetaData().getNumericField(message, "Temperature"), 0d);
+        assertEquals(37.0d, message.getHumidity(), 0d);
+        assertEquals(37.0d, message.getMetaData().getNumericField(message, "Humidity"), 0d);
+    }
+
+    protected OregonV2AbstractMessage getMessage(String data) {
+        BitPacket packet = new BitPacket(100);
+
+        for (int i = 0; i < data.length(); i += 2) {
+            String bs = data.substring(i, i + 2);
+            int b = Integer.parseInt(bs, 16);
+            for (int j = 0; j < 8; j++) {
+                packet.addBit((b & 1) == 1);
+                b >>= 1;
+            }
+        }
+
+        OregonV2AbstractMessage message = new OregonV2MessageFactory("test").createMessage(packet);
+        return message.isValid() ? message : null;
     }
 }
