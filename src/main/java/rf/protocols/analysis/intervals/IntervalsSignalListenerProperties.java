@@ -12,9 +12,9 @@ public class IntervalsSignalListenerProperties extends AbstractProperties {
 
     public Interval interval0 = new Interval(400, 800, "0");
     public Interval interval1 = new Interval(800, 1200, "1");
-    public Interval interval2 = new Interval(-1, -1, null);
-    public Interval interval3 = new Interval(-1, -1, null);
-    public Interval interval4 = new Interval(-1, -1, null);
+    public Interval interval2 = new Interval(-1, -1, "2");
+    public Interval interval3 = new Interval(-1, -1, "3");
+    public Interval interval4 = new Interval(-1, -1, "4");
 
     public String namesSeparator = null;
 

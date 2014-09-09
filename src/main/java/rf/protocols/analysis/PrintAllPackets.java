@@ -12,6 +12,7 @@ import rf.protocols.registry.SignalListenerRegistry;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -43,7 +44,7 @@ public class PrintAllPackets {
                     printService.execute(new Runnable() {
                         @Override
                         public void run() {
-                            System.out.println(protocolName + ": " + clone);
+                            System.out.println(new Date() + " " + protocolName + ": " + clone);
                         }
                     });
                 }
