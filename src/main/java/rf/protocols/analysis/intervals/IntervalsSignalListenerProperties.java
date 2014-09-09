@@ -29,12 +29,12 @@ public class IntervalsSignalListenerProperties extends AbstractProperties {
                 interval4.isInside(l);
     }
 
-    public String getIntervalName(long l) {
-        if (interval0.isInside(l)) return interval0.getName(l);
-        if (interval1.isInside(l)) return interval1.getName(l);
-        if (interval2.isInside(l)) return interval2.getName(l);
-        if (interval3.isInside(l)) return interval3.getName(l);
-        if (interval4.isInside(l)) return interval4.getName(l);
+    public String getIntervalName(long l, boolean level) {
+        if (interval0.isInside(l)) return interval0.getName(l, level);
+        if (interval1.isInside(l)) return interval1.getName(l, level);
+        if (interval2.isInside(l)) return interval2.getName(l, level);
+        if (interval3.isInside(l)) return interval3.getName(l, level);
+        if (interval4.isInside(l)) return interval4.getName(l, level);
         return null;
     }
 
@@ -59,12 +59,15 @@ public class IntervalsSignalListenerProperties extends AbstractProperties {
 
         public void setName(String name) {
             this.name = name;
-            format = name != null && name.contains("%d");
+            format = name != null && (name.contains("%d") || name.contains("%l"));
         }
 
-        public String getName(long l) {
-            if (format)
-                return name.replace("%d", String.valueOf(l));
+        public String getName(long l, boolean level) {
+            if (format) {
+                String result = name.replace("%d", String.valueOf(l));
+                result = result.replace("%l", (level ? "^" : "v"));
+                return result;
+            }
             else
                 return name;
         }

@@ -27,6 +27,7 @@ public class IntervalsSignalListener implements SignalLengthListener {
         if (!started) {
             if (properties.isObservableInterval(lengthInMicros)) {
                 started = true;
+                packet.setFirstSignalLevel(high);
                 packet.addLength(lengthInMicros);
             } else {
                 packet.setBeforePacketLength(lengthInMicros);

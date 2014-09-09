@@ -13,6 +13,7 @@ public class IntervalsPacket implements Packet, Cloneable {
     private long beforePacketLength;
     private long afterPacketLength;
     private List<Long> lengths = new ArrayList<Long>();
+    private boolean firstSignalLevel;
 
     public IntervalsPacket() {
         clear();
@@ -20,6 +21,7 @@ public class IntervalsPacket implements Packet, Cloneable {
 
     public void clear() {
         beforePacketLength = afterPacketLength = -1;
+        firstSignalLevel = false;
         lengths.clear();
     }
 
@@ -29,6 +31,14 @@ public class IntervalsPacket implements Packet, Cloneable {
 
     public void setAfterPacketLength(long afterPacketLength) {
         this.afterPacketLength = afterPacketLength;
+    }
+
+    public void setFirstSignalLevel(boolean firstSignalLevel) {
+        this.firstSignalLevel = firstSignalLevel;
+    }
+
+    public boolean getFirstSignalLevel() {
+        return firstSignalLevel;
     }
 
     public void addLength(long length) {

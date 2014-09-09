@@ -50,6 +50,7 @@ public class IntervalsMain {
         System.out.print("]");
 
         boolean isFirst = true;
+        boolean level = packet.getFirstSignalLevel();
         for (long length : packet.getLengths()) {
             // separator
             if (properties.namesSeparator != null) {
@@ -59,7 +60,8 @@ public class IntervalsMain {
                     isFirst = false;
             }
 
-            System.out.print(properties.getIntervalName(length));
+            System.out.print(properties.getIntervalName(length, level));
+            level = !level;
         }
 
         System.out.print("[");
