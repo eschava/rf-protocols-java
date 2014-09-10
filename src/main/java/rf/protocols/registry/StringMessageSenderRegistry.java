@@ -46,6 +46,29 @@ public class StringMessageSenderRegistry {
         packetFactoryMap.put(name, packetFactory);
     }
 
+    public void setProtocolProperty(String protocol, String property, String value) {
+        PacketSender packetSender = packetSenderMap.get(protocol);
+        if (packetSender != null) {
+            packetSender.setProperty(property, value);
+        }
+    }
+
+    public boolean cloneProtocol(String oldName, String newName) {
+        if (packetSenderMap.containsKey(oldName)) {
+            PacketSender packetSender = packetSenderMap.get(oldName);
+            packetSender = packetSender.clone(newName);
+            packetSenderMap.put(newName, packetSender);
+
+            PacketFactory packetFactory = packetFactoryMap.get(oldName);
+//            packetFactory = packetFactory.clone(newName);
+            packetFactoryMap.put(newName, packetFactory);
+
+            return true;
+        }
+
+        return false;
+    }
+
     public void sendMessage(String senderName, String message, SignalLengthSender signalSender) {
         StringMessage stringMessage = new StringMessage(senderName, message);
 

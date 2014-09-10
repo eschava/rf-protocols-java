@@ -6,7 +6,7 @@ import rf.protocols.core.SignalLengthSender;
 /**
  * @author Eugene Schava <eschava@gmail.com>
  */
-public class RemoteSwitchPacketSender implements PacketSender<RemoteSwitchPacket> {
+public class RemoteSwitchPacketSender implements PacketSender<RemoteSwitchPacket>, Cloneable {
     private String name = "RemoteSwitch";
     private RemoteSwitchSignalListenerProperties properties = new RemoteSwitchSignalListenerProperties();
 
@@ -24,6 +24,11 @@ public class RemoteSwitchPacketSender implements PacketSender<RemoteSwitchPacket
 
     public void setProperties(RemoteSwitchSignalListenerProperties properties) {
         this.properties = properties;
+    }
+
+    @Override
+    public void setProperty(String property, String value) {
+        properties.setProperty(property, value);
     }
 
     public void send(RemoteSwitchPacket packet, SignalLengthSender signalSender) {
@@ -75,5 +80,17 @@ public class RemoteSwitchPacketSender implements PacketSender<RemoteSwitchPacket
     private void sendSeparator(SignalLengthSender signalSender) {
         signalSender.send(true, (long) (properties.separatorLength * properties.shortSignalFraction));
         signalSender.send(false, properties.separatorLength);
+    }
+
+    @Override
+    public RemoteSwitchPacketSender clone(String newName) {
+        try {
+            RemoteSwitchPacketSender clone = (RemoteSwitchPacketSender) super.clone();
+            clone.properties = (RemoteSwitchSignalListenerProperties) properties.clone();
+            clone.setName(newName);
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

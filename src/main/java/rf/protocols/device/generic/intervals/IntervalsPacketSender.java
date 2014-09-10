@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * @author Eugene Schava <eschava@gmail.com>
  */
-public class IntervalsPacketSender implements PacketSender<IntervalsPacket> {
+public class IntervalsPacketSender implements PacketSender<IntervalsPacket>, Cloneable {
     private String name = "Intervals";
     private IntervalsSignalListenerProperties properties = new IntervalsSignalListenerProperties();
 
@@ -26,6 +26,11 @@ public class IntervalsPacketSender implements PacketSender<IntervalsPacket> {
 
     public void setProperties(IntervalsSignalListenerProperties properties) {
         this.properties = properties;
+    }
+
+    @Override
+    public void setProperty(String property, String value) {
+        properties.setProperty(property, value);
     }
 
     public void send(IntervalsPacket packet, SignalLengthSender signalSender) {
@@ -47,6 +52,18 @@ public class IntervalsPacketSender implements PacketSender<IntervalsPacket> {
 
             level = !level;
             signalSender.send(level, separatorLength);
+        }
+    }
+
+    @Override
+    public PacketSender<IntervalsPacket> clone(String newName) {
+        try {
+            IntervalsPacketSender clone = (IntervalsPacketSender) super.clone();
+            clone.properties = (IntervalsSignalListenerProperties) properties.clone();
+            clone.setName(newName);
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
         }
     }
 }

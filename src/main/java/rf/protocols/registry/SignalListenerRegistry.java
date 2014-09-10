@@ -58,40 +58,38 @@ public class SignalListenerRegistry {
         map.put(listenerFactory.getProtocol(), listenerFactory);
     }
 
-    public void cloneProtocol(String oldName, String newName) {
+    public boolean cloneProtocol(String oldName, String newName) {
         if (signalListenerFactoryMap.containsKey(oldName)) {
             SignalLevelListenerFactory listenerFactory = signalListenerFactoryMap.get(oldName);
             listenerFactory = listenerFactory.clone(newName);
             signalListenerFactoryMap.put(newName, listenerFactory);
-            return;
+            return true;
         }
 
         if (signalLengthListenerFactoryMap.containsKey(oldName)) {
             SignalLengthListenerFactory listenerFactory = signalLengthListenerFactoryMap.get(oldName);
             listenerFactory = listenerFactory.clone(newName);
             signalLengthListenerFactoryMap.put(newName, listenerFactory);
-//            return;
+            return true;
         }
+
+        return false;
     }
 
-    public void setProtocolProperty(String protocol, String property, String value) {
-        // for using artificial property like CurrentName.clone=NewName
-        if (property.equals("clone")) {
-            cloneProtocol(property, value);
-            return;
-        }
-
+    public boolean setProtocolProperty(String protocol, String property, String value) {
         if (signalListenerFactoryMap.containsKey(protocol)) {
             SignalLevelListenerFactory listenerFactory = signalListenerFactoryMap.get(protocol);
             listenerFactory.setProperty(property, value);
-            return;
+            return true;
         }
 
         if (signalLengthListenerFactoryMap.containsKey(protocol)) {
             SignalLengthListenerFactory listenerFactory = signalLengthListenerFactoryMap.get(protocol);
             listenerFactory.setProperty(property, value);
-            //            return;
+            return true;
         }
+
+        return false;
     }
 
     public Collection<String> getProtocolNames() {
