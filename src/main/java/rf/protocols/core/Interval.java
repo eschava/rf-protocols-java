@@ -24,6 +24,10 @@ public class Interval {
         return min;
     }
 
+    public long getMed() {
+        return min + (max - min) / 2;
+    }
+
     public long getMax() {
         return max;
     }
@@ -41,13 +45,13 @@ public class Interval {
     }
 
     public void setDelta(long delta) {
-        long med = min + (max - min) / 2;
+        long med = getMed();
         min = med - delta;
         max = med + delta;
     }
 
     public void setTolerance(double tolerance) {
-        long med = min + (max - min) / 2;
+        long med = getMed();
         min = (long) (med * (1 - tolerance));
         max = (long) (med * (1 + tolerance));
     }

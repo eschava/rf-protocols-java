@@ -1,0 +1,52 @@
+package rf.protocols.device.generic.intervals;
+
+import rf.protocols.core.PacketSender;
+import rf.protocols.core.SignalLengthSender;
+
+import java.util.Map;
+
+/**
+ * @author Eugene Schava <eschava@gmail.com>
+ */
+public class IntervalsPacketSender implements PacketSender<IntervalsPacket> {
+    private String name = "Intervals";
+    private IntervalsSignalListenerProperties properties = new IntervalsSignalListenerProperties();
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public IntervalsSignalListenerProperties getProperties() {
+        return properties;
+    }
+
+    public void setProperties(IntervalsSignalListenerProperties properties) {
+        this.properties = properties;
+    }
+
+    public void send(IntervalsPacket packet, SignalLengthSender signalSender) {
+        String message = packet.toString();
+        Map<String, Long> intervalLengths = properties.getIntervalLengthsMap();
+        long separatorLength = properties.separatorInterval.getMed();
+        boolean level = properties.separatorIsHigh;
+
+        signalSender.send(level, separatorLength);
+
+        for (int i = 0; i < properties.repeats; i++) {
+            for (char ch : message.toCharArray()) {
+                Long l = intervalLengths.get(String.valueOf(ch));
+                if (l != null) {
+                    level = !level;
+                    signalSender.send(level, l);
+                }
+            }
+
+            level = !level;
+            signalSender.send(level, separatorLength);
+        }
+    }
+}

@@ -4,11 +4,13 @@ import rf.protocols.core.*;
 import rf.protocols.core.impl.SignalLengthAdapterLevelListener;
 import rf.protocols.core.impl.SignalLengthListenerGroup;
 import rf.protocols.core.impl.SignalLevelListenerGroup;
+import rf.protocols.device.generic.intervals.IntervalsSignalListenerFactory;
 import rf.protocols.device.oregon.sl109.OregonSL109SignalListenerFactory;
 import rf.protocols.device.oregon.v2.OregonV2SignalListenerFactory;
 import rf.protocols.device.owl.OwlSignalListenerFactory;
 import rf.protocols.device.pt2262.PT2262SignalListenerFactory;
 import rf.protocols.device.remoteswitch.RemoteSwitchSignalListenerFactory;
+import rf.protocols.registry.interfaces.ConceptSignalListenerFactory;
 import rf.protocols.registry.interfaces.SignalLengthListenerFactory;
 import rf.protocols.registry.interfaces.SignalLevelListenerFactory;
 import rf.protocols.registry.interfaces.SignalListenerFactory;
@@ -39,6 +41,7 @@ public class SignalListenerRegistry {
         registerFactory(new OwlSignalListenerFactory());
         registerFactory(new PT2262SignalListenerFactory());
         registerFactory(new RemoteSwitchSignalListenerFactory());
+        registerFactory(new IntervalsSignalListenerFactory());
     }
 
     public void registerFactory(SignalLevelListenerFactory signalLevelListenerFactory) {
@@ -50,10 +53,10 @@ public class SignalListenerRegistry {
     }
 
     private <F extends SignalListenerFactory> void registerFactory(F listenerFactory, Map<String, F> map) {
-        factoryNames.add(listenerFactory.getProtocol());
+        if (!(listenerFactory instanceof ConceptSignalListenerFactory)) // skip concept factories
+            factoryNames.add(listenerFactory.getProtocol());
         map.put(listenerFactory.getProtocol(), listenerFactory);
     }
-
 
     public void cloneProtocol(String oldName, String newName) {
         if (signalListenerFactoryMap.containsKey(oldName)) {
@@ -72,6 +75,12 @@ public class SignalListenerRegistry {
     }
 
     public void setProtocolProperty(String protocol, String property, String value) {
+        // for using artificial property like CurrentName.clone=NewName
+        if (property.equals("clone")) {
+            cloneProtocol(property, value);
+            return;
+        }
+
         if (signalListenerFactoryMap.containsKey(protocol)) {
             SignalLevelListenerFactory listenerFactory = signalListenerFactoryMap.get(protocol);
             listenerFactory.setProperty(property, value);
