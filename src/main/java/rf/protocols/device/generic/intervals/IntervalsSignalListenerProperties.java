@@ -10,7 +10,6 @@ import java.util.Map;
  * @author Eugene Schava <eschava@gmail.com>
  */
 public class IntervalsSignalListenerProperties extends AbstractProperties {
-    public int minSize = 10;
     public boolean separatorIsHigh = false;
 
     public Interval packetSize = new Interval(20, 2000);

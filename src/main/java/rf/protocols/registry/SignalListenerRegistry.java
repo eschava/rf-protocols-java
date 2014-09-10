@@ -62,6 +62,7 @@ public class SignalListenerRegistry {
         if (signalListenerFactoryMap.containsKey(oldName)) {
             SignalLevelListenerFactory listenerFactory = signalListenerFactoryMap.get(oldName);
             listenerFactory = listenerFactory.clone(newName);
+            factoryNames.add(newName);
             signalListenerFactoryMap.put(newName, listenerFactory);
             return true;
         }
@@ -69,6 +70,7 @@ public class SignalListenerRegistry {
         if (signalLengthListenerFactoryMap.containsKey(oldName)) {
             SignalLengthListenerFactory listenerFactory = signalLengthListenerFactoryMap.get(oldName);
             listenerFactory = listenerFactory.clone(newName);
+            factoryNames.add(newName);
             signalLengthListenerFactoryMap.put(newName, listenerFactory);
             return true;
         }

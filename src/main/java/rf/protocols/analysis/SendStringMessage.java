@@ -4,6 +4,7 @@ import rf.protocols.core.SignalLengthSender;
 import rf.protocols.core.impl.AbstractProperties;
 import rf.protocols.external.Adapter;
 import rf.protocols.registry.AdapterRegistry;
+import rf.protocols.registry.PropertyConfigurer;
 import rf.protocols.registry.StringMessageSenderRegistry;
 
 import java.io.IOException;
@@ -35,11 +36,20 @@ public class SendStringMessage {
 
         @Override
         public void setProperty(String name, String value) {
-            if (name.startsWith("adapter.")) {
-                Adapter adptr = AdapterRegistry.getInstance().getAdapter(adapter);
-                adptr.setProperty(name.substring("adapter.".length()), value);
-            } else {
+            if (!name.contains(".")) {
                 super.setProperty(name, value);
+                return;
+            }
+
+            String[] parts = name.split("\\.", 2);
+            String protocol = parts[0];
+            name = parts[1];
+
+            if (protocol.equals("adapter")) {
+                Adapter adptr = AdapterRegistry.getInstance().getAdapter(adapter);
+                adptr.setProperty(name, value);
+            } else {
+                PropertyConfigurer.setProtocolProperty(protocol, name, value);
             }
         }
     }

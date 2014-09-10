@@ -7,7 +7,7 @@ public class PropertyConfigurer {
     public static void setProtocolProperty(String protocol, String property, String value) {
         // for using artificial property like CurrentName.clone=NewName
         if (property.equals("clone")) {
-            cloneProtocol(property, value);
+            cloneProtocol(protocol, value);
             return;
         }
 
