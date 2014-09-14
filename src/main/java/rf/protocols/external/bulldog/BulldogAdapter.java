@@ -1,13 +1,11 @@
 package rf.protocols.external.bulldog;
 
-import org.bulldog.core.Signal;
 import org.bulldog.core.pinfeatures.DigitalInput;
 import org.bulldog.core.pinfeatures.DigitalOutput;
 import org.bulldog.core.pinfeatures.Pin;
 import org.bulldog.core.platform.Board;
 import org.bulldog.core.platform.Platform;
 import org.bulldog.cubieboard.Cubieboard;
-import org.bulldog.linux.jni.NativeTools;
 import rf.protocols.core.SignalLengthListener;
 import rf.protocols.core.SignalLengthSender;
 import rf.protocols.core.SignalLevelListener;
@@ -49,21 +47,7 @@ public class BulldogAdapter implements Adapter {
             input.enableInterrupts();
             input.addInterruptListener(new BulldogInterruptListener(listener));
         } else {
-            Thread readingThread = new Thread() {
-                @Override
-                public void run() {
-                    Signal oldValue = null;
-                    while (true) {
-                        Signal value = input.read();
-                        if (value != oldValue) {
-                            listener.onSignal(value.getBooleanValue());
-                            oldValue = value;
-                        }
-                        if (properties.pollingDelay > 0)
-                            NativeTools.sleepMicros(properties.pollingDelay);
-                    }
-                }
-            };
+            Thread readingThread = new Thread(new BulldogPollingListener(input, listener, properties.pollingDelay));
             readingThread.setDaemon(true);
             readingThread.start();
         }
