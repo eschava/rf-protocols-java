@@ -3,7 +3,7 @@ package rf.protocols.registry;
 /**
  * @author Eugene Schava <eschava@gmail.com>
  */
-public class PropertyConfigurer {
+public class ProtocolConfigurer {
     public static void setProtocolProperty(String protocol, String property, String value) {
         // for using artificial property like CurrentName.clone=NewName
         if (property.equals("clone")) {
@@ -16,7 +16,9 @@ public class PropertyConfigurer {
     }
 
     private static void cloneProtocol(String oldName, String newName) {
-        SignalListenerRegistry.getInstance().cloneProtocol(oldName, newName);
-        StringMessageSenderRegistry.getInstance().cloneProtocol(oldName, newName);
+        if (!SignalListenerRegistry.getInstance().cloneProtocol(oldName, newName))
+            throw new RuntimeException("Cannot clone listener protocol " + oldName + " because it isn't registered");
+        if (!StringMessageSenderRegistry.getInstance().cloneProtocol(oldName, newName))
+            throw new RuntimeException("Cannot clone sender protocol " + oldName + " because it isn't registered");
     }
 }

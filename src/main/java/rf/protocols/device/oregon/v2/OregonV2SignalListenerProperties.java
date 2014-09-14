@@ -1,6 +1,7 @@
 package rf.protocols.device.oregon.v2;
 
 import rf.protocols.core.Interval;
+import rf.protocols.core.Properties;
 import rf.protocols.core.impl.AbstractProperties;
 
 /**
@@ -11,4 +12,11 @@ public class OregonV2SignalListenerProperties extends AbstractProperties {
     public long minLongSignalLength = 700;
     public int minPreambuleSize = 32;
     public int minPacketSize = 60;
+
+    @Override
+    public Properties clone() {
+        Properties clone = super.clone();
+        ((OregonV2SignalListenerProperties)clone).signalLength = signalLength.clone();
+        return clone;
+    }
 }

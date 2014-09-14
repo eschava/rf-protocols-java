@@ -85,7 +85,8 @@ public class RemoteSwitchSignalListener implements SignalLengthListener {
                 break;
 
             case SecondSeparator:
-                if (isSecondSeparatorSignal(lengthInMicros)) {
+//                if (isSecondSeparatorSignal(lengthInMicros)) {
+                if (lengthInMicros >= secondSeparatorInterval.getMin()) {
                     packetListener.onPacket(new RemoteSwitchPacket(size, value));
                 }
                 reset = true;

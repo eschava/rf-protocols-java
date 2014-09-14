@@ -3,7 +3,7 @@ package rf.protocols.core;
 /**
  * @author Eugene Schava <eschava@gmail.com>
  */
-public class Interval {
+public class Interval implements Cloneable {
     private long min, max;
 
     public Interval(long med) {
@@ -63,5 +63,14 @@ public class Interval {
     @Override
     public String toString() {
         return "Interval[" + min + "," + max + ']';
+    }
+
+    @Override
+    public Interval clone() {
+        try {
+            return (Interval) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

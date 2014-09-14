@@ -9,16 +9,7 @@ import java.util.Map;
  * @author Eugene Schava <eschava@gmail.com>
  */
 public class IntervalsPacketSender implements PacketSender<IntervalsPacket>, Cloneable {
-    private String name = "Intervals";
     private IntervalsSignalListenerProperties properties = new IntervalsSignalListenerProperties();
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public IntervalsSignalListenerProperties getProperties() {
         return properties;
@@ -60,7 +51,6 @@ public class IntervalsPacketSender implements PacketSender<IntervalsPacket>, Clo
         try {
             IntervalsPacketSender clone = (IntervalsPacketSender) super.clone();
             clone.properties = (IntervalsSignalListenerProperties) properties.clone();
-            clone.setName(newName);
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);

@@ -7,7 +7,7 @@ import rf.protocols.core.impl.AbstractProperties;
 import rf.protocols.core.impl.SignalLevelListenerGroup;
 import rf.protocols.external.Adapter;
 import rf.protocols.registry.AdapterRegistry;
-import rf.protocols.registry.PropertyConfigurer;
+import rf.protocols.registry.ProtocolConfigurer;
 import rf.protocols.registry.SignalListenerRegistry;
 
 import java.io.IOException;
@@ -80,7 +80,7 @@ public class PrintAllPackets {
                 Adapter adptr = AdapterRegistry.getInstance().getAdapter(adapter);
                 adptr.setProperty(name, value);
             } else {
-                PropertyConfigurer.setProtocolProperty(protocol, name, value);
+                ProtocolConfigurer.setProtocolProperty(protocol, name, value);
             }
         }
     }

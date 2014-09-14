@@ -1,9 +1,13 @@
 package rf.protocols.device.generic.intervals;
 
 import rf.protocols.core.Interval;
+import rf.protocols.core.Properties;
 import rf.protocols.core.impl.AbstractProperties;
+import rf.protocols.core.impl.ResizeableArrayList;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -14,11 +18,7 @@ public class IntervalsSignalListenerProperties extends AbstractProperties {
 
     public Interval packetSize = new Interval(20, 2000);
     public Interval separatorInterval = new Interval(10000, 12000);
-    public NamedInterval interval0 = new NamedInterval(400, 800, "0");
-    public NamedInterval interval1 = new NamedInterval(800, 1200, "1");
-    public NamedInterval interval2 = new NamedInterval(-1, -1, "2");
-    public NamedInterval interval3 = new NamedInterval(-1, -1, "3");
-    public NamedInterval interval4 = new NamedInterval(-1, -1, "4");
+    public List<NamedInterval> interval = new ResizeableArrayList<NamedInterval>(new NamedIntervalFactory());
 
     // sender properties
     public int repeats = 8;
@@ -32,22 +32,32 @@ public class IntervalsSignalListenerProperties extends AbstractProperties {
     }
 
     public String getIntervalName(long l) {
-        if (interval0.isInside(l)) return interval0.getName();
-        if (interval1.isInside(l)) return interval1.getName();
-        if (interval2.isInside(l)) return interval2.getName();
-        if (interval3.isInside(l)) return interval3.getName();
-        if (interval4.isInside(l)) return interval4.getName();
+        for (NamedInterval in : interval)
+            if (in.isInside(l))
+                return in.getName();
         return null;
     }
 
     public Map<String, Long> getIntervalLengthsMap() {
-        Map<String, Long> map = new HashMap<String, Long>();
-        if (interval0.getMax() > 0) map.put(interval0.getName(), interval0.getMed());
-        if (interval1.getMax() > 0) map.put(interval1.getName(), interval1.getMed());
-        if (interval2.getMax() > 0) map.put(interval2.getName(), interval2.getMed());
-        if (interval3.getMax() > 0) map.put(interval3.getName(), interval3.getMed());
-        if (interval4.getMax() > 0) map.put(interval4.getName(), interval4.getMed());
+        Map<String, Long> map = new HashMap<String, Long>(interval.size());
+        for (NamedInterval in : interval)
+            map.put(in.getName(), in.getMed());
         return map;
+    }
+
+    @Override
+    public Properties clone() {
+        IntervalsSignalListenerProperties clone = (IntervalsSignalListenerProperties) super.clone();
+        clone.packetSize = packetSize.clone();
+        clone.separatorInterval = separatorInterval.clone();
+        // clone intervals
+        clone.interval = (List<NamedInterval>) ((ArrayList<NamedInterval>)interval).clone();
+        List<NamedInterval> intervalClone = clone.interval;
+        for (int i = 0; i < intervalClone.size(); i++) {
+            NamedInterval interval = intervalClone.get(i);
+            intervalClone.set(i, (NamedInterval) interval.clone());
+        }
+        return clone;
     }
 
     public static class NamedInterval extends rf.protocols.core.Interval {
@@ -64,6 +74,13 @@ public class IntervalsSignalListenerProperties extends AbstractProperties {
 
         public String getName() {
             return name;
+        }
+    }
+
+    private class NamedIntervalFactory implements ResizeableArrayList.Factory<NamedInterval> {
+        @Override
+        public NamedInterval create(int index) {
+            return new NamedInterval(-1, -1, String.valueOf(index));
         }
     }
 }

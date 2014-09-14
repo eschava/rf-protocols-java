@@ -1,8 +1,13 @@
 package rf.protocols.analysis.intervals;
 
+import rf.protocols.core.Properties;
 import rf.protocols.core.impl.AbstractProperties;
+import rf.protocols.core.impl.ResizeableArrayList;
 import rf.protocols.external.Adapter;
 import rf.protocols.registry.AdapterRegistry;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Eugene Schava <eschava@gmail.com>
@@ -10,11 +15,7 @@ import rf.protocols.registry.AdapterRegistry;
 public class IntervalsSignalListenerProperties extends AbstractProperties {
     public int minSize = 10;
 
-    public Interval interval0 = new Interval(400, 800, "0");
-    public Interval interval1 = new Interval(800, 1200, "1");
-    public Interval interval2 = new Interval(-1, -1, "2");
-    public Interval interval3 = new Interval(-1, -1, "3");
-    public Interval interval4 = new Interval(-1, -1, "4");
+    public List<NamedInterval> interval = new ResizeableArrayList<NamedInterval>(new NamedIntervalFactory());
 
     public String namesSeparator = null;
 
@@ -22,19 +23,16 @@ public class IntervalsSignalListenerProperties extends AbstractProperties {
     public String pin;
 
     public boolean isObservableInterval(long l) {
-        return interval0.isInside(l) ||
-                interval1.isInside(l) ||
-                interval2.isInside(l) ||
-                interval3.isInside(l) ||
-                interval4.isInside(l);
+        for (NamedInterval in : interval)
+            if (in.isInside(l))
+                return true;
+        return false;
     }
 
     public String getIntervalName(long l, boolean level) {
-        if (interval0.isInside(l)) return interval0.getName(l, level);
-        if (interval1.isInside(l)) return interval1.getName(l, level);
-        if (interval2.isInside(l)) return interval2.getName(l, level);
-        if (interval3.isInside(l)) return interval3.getName(l, level);
-        if (interval4.isInside(l)) return interval4.getName(l, level);
+        for (NamedInterval in : interval)
+            if (in.isInside(l))
+                return in.getName(l, level);
         return null;
     }
 
@@ -48,11 +46,25 @@ public class IntervalsSignalListenerProperties extends AbstractProperties {
         }
     }
 
-    public static class Interval extends rf.protocols.core.Interval {
+    @Override
+    public Properties clone() {
+        IntervalsSignalListenerProperties clone = (IntervalsSignalListenerProperties) super.clone();
+        // clone intervals
+        clone.interval = (List<NamedInterval>) ((ArrayList<NamedInterval>)interval).clone();
+        List<NamedInterval> intervalClone = clone.interval;
+        for (int i = 0; i < intervalClone.size(); i++) {
+            NamedInterval interval = intervalClone.get(i);
+            intervalClone.set(i, (NamedInterval) interval.clone());
+        }
+
+        return clone;
+    }
+
+    public static class NamedInterval extends rf.protocols.core.Interval {
         private String name;
         private boolean format;
 
-        public Interval(long min, long max, String name) {
+        public NamedInterval(long min, long max, String name) {
             super(min, max);
             setName(name);
         }
@@ -70,6 +82,13 @@ public class IntervalsSignalListenerProperties extends AbstractProperties {
             }
             else
                 return name;
+        }
+    }
+
+    private class NamedIntervalFactory implements ResizeableArrayList.Factory<NamedInterval> {
+        @Override
+        public NamedInterval create(int index) {
+            return new NamedInterval(-1, -1, String.valueOf(index));
         }
     }
 }

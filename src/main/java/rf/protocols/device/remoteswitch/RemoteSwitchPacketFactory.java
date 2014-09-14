@@ -11,4 +11,13 @@ public class RemoteSwitchPacketFactory implements PacketFactory<RemoteSwitchPack
     public RemoteSwitchPacket createPacket(StringMessage message) {
         return new RemoteSwitchPacket(message.getValue());
     }
+
+    @Override
+    public void setProperty(String property, String value) {
+    }
+
+    @Override
+    public PacketFactory<RemoteSwitchPacket, StringMessage> clone(String newName) {
+        return this; // no state
+    }
 }

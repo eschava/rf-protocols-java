@@ -3,7 +3,7 @@ package rf.protocols.external.paho;
 import rf.protocols.core.impl.AbstractProperties;
 import rf.protocols.external.Adapter;
 import rf.protocols.registry.AdapterRegistry;
-import rf.protocols.registry.PropertyConfigurer;
+import rf.protocols.registry.ProtocolConfigurer;
 
 /**
  * @author Eugene Schava <eschava@gmail.com>
@@ -35,7 +35,7 @@ public class MqttProperties extends AbstractProperties {
             Adapter adptr = AdapterRegistry.getInstance().getAdapter(adapter);
             adptr.setProperty(name, value);
         } else {
-            PropertyConfigurer.setProtocolProperty(protocol, name, value);
+            ProtocolConfigurer.setProtocolProperty(protocol, name, value);
         }
     }
 }

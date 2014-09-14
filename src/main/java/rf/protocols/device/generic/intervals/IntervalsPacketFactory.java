@@ -11,4 +11,13 @@ public class IntervalsPacketFactory implements PacketFactory<IntervalsPacket, St
     public IntervalsPacket createPacket(StringMessage message) {
         return new IntervalsPacket(message.getValue());
     }
+
+    @Override
+    public void setProperty(String property, String value) {
+    }
+
+    @Override
+    public PacketFactory<IntervalsPacket, StringMessage> clone(String newName) {
+        return this; // no state
+    }
 }
