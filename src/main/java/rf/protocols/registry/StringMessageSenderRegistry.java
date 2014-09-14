@@ -7,6 +7,8 @@ import rf.protocols.core.SignalLengthSender;
 import rf.protocols.core.message.StringMessage;
 import rf.protocols.device.generic.intervals.IntervalsPacketFactory;
 import rf.protocols.device.generic.intervals.IntervalsPacketSender;
+import rf.protocols.device.generic.intervalsequence.IntervalSequencePacketFactory;
+import rf.protocols.device.generic.intervalsequence.IntervalSequenceProtocolProperties;
 import rf.protocols.device.remoteswitch.RemoteSwitchPacketFactory;
 import rf.protocols.device.remoteswitch.RemoteSwitchPacketSender;
 
@@ -17,6 +19,10 @@ import java.util.Map;
  * @author Eugene Schava <eschava@gmail.com>
  */
 public class StringMessageSenderRegistry {
+    public static final String REMOTE_SWITCH_PROTOCOL = "RemoteSwitch";
+    public static final String INTERVALS_PROTOCOL = "Intervals";
+    public static final String INTERVAL_SEQUENCE_PROTOCOL = "IntervalSequence";
+
     private static final StringMessageSenderRegistry INSTANCE = new StringMessageSenderRegistry();
 
 //    private final Set<String> factoryNames = new HashSet<String>();
@@ -29,13 +35,16 @@ public class StringMessageSenderRegistry {
 
     private StringMessageSenderRegistry() {
         // register all known factories
-        RemoteSwitchPacketSender switchPacketSender = new RemoteSwitchPacketSender();
-        registerSender(switchPacketSender.getName(), switchPacketSender);
-        registerPacketFactory(switchPacketSender.getName(), new RemoteSwitchPacketFactory());
+        registerSender(REMOTE_SWITCH_PROTOCOL, new RemoteSwitchPacketSender());
+        registerPacketFactory(REMOTE_SWITCH_PROTOCOL, new RemoteSwitchPacketFactory());
 
-        IntervalsPacketSender intervalsPacketSender = new IntervalsPacketSender();
-        registerSender(intervalsPacketSender.getName(), intervalsPacketSender);
-        registerPacketFactory(intervalsPacketSender.getName(), new IntervalsPacketFactory());
+        registerSender(INTERVALS_PROTOCOL, new IntervalsPacketSender());
+        registerPacketFactory(INTERVALS_PROTOCOL, new IntervalsPacketFactory());
+
+        IntervalsPacketSender intervalSequencePacketSender = new IntervalsPacketSender();
+        intervalSequencePacketSender.setProperties(new IntervalSequenceProtocolProperties());
+        registerSender(INTERVAL_SEQUENCE_PROTOCOL, intervalSequencePacketSender);
+        registerPacketFactory(INTERVAL_SEQUENCE_PROTOCOL, new IntervalSequencePacketFactory());
     }
 
     private void registerSender(String name, PacketSender sender) {
@@ -50,6 +59,7 @@ public class StringMessageSenderRegistry {
         PacketSender packetSender = packetSenderMap.get(protocol);
         if (packetSender != null) {
             packetSender.setProperty(property, value);
+            packetFactoryMap.get(protocol).setProperty(property, value);
         }
     }
 
@@ -60,7 +70,7 @@ public class StringMessageSenderRegistry {
             packetSenderMap.put(newName, packetSender);
 
             PacketFactory packetFactory = packetFactoryMap.get(oldName);
-//            packetFactory = packetFactory.clone(newName);
+            packetFactory = packetFactory.clone(newName);
             packetFactoryMap.put(newName, packetFactory);
 
             return true;
