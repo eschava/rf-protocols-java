@@ -39,6 +39,12 @@
 
     <dependencies>
         <dependency>
+        	<groupId>ognl</groupId>
+        	<artifactId>ognl</artifactId>
+        	<version>3.0.8</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.pi4j</groupId>
             <artifactId>pi4j-core</artifactId>
             <version>0.0.5</version>
@@ -57,13 +63,6 @@
             <groupId>org.eclipse.paho</groupId>
             <artifactId>mqtt-client</artifactId>
             <version>0.4.0</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>ST4</artifactId>
-            <version>4.0.8</version>
             <scope>compile</scope>
         </dependency>
 

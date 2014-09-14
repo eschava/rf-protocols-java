@@ -2,23 +2,30 @@ package rf.protocols.external.paho;
 
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
-import org.stringtemplate.v4.ST;
 import rf.protocols.core.Message;
 import rf.protocols.core.MessageListener;
 import rf.protocols.core.MessageMetaData;
+import rf.protocols.external.ognl.OgnlMessageFormatter;
+import rf.protocols.external.ognl.OgnlObjectPropertyAccessor;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Eugene Schava <eschava@gmail.com>
  */
 public class PahoMessageListener implements MessageListener<Message> {
+    static {
+        OgnlObjectPropertyAccessor.install();
+    }
+
     private final MqttClient client;
-    private final ST topicTemplate;
+    private final String topicTemplate;
 
     public PahoMessageListener(MqttClient client, String topicTemplate) {
         this.client = client;
-        this.topicTemplate = new ST(topicTemplate);
+        this.topicTemplate = topicTemplate;
     }
 
     @Override
@@ -42,13 +49,9 @@ public class PahoMessageListener implements MessageListener<Message> {
     }
 
     private synchronized String getTopic(Message message, String fieldName) {
-        try {
-            topicTemplate.add("message", message);
-            topicTemplate.add("field", fieldName);
-            return topicTemplate.render();
-        } finally {
-            topicTemplate.remove("message");
-            topicTemplate.remove("field");
-        }
+        Map<String, Object> root = new HashMap<String, Object>(2);
+        root.put("message", message);
+        root.put("field", fieldName);
+        return OgnlMessageFormatter.format(topicTemplate, root);
     }
 }

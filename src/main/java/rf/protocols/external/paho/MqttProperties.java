@@ -13,7 +13,7 @@ public class MqttProperties extends AbstractProperties {
     public String mqttClientId = "rf-protocols";
     public String mqttUser = null;
     public String mqttPassword = null;
-    public String sendTopicTemplate = "rf/<message.protocol>/<field>";
+    public String sendTopicTemplate = "rf/${message.protocol}/${field}";
     public String receiveTopicTemplate = "rf/send/+";
     public String protocolNames = "all";
     public String adapter = null;

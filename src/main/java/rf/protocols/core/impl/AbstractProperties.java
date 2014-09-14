@@ -1,5 +1,6 @@
 package rf.protocols.core.impl;
 
+import ognl.Ognl;
 import rf.protocols.core.Properties;
 
 import java.beans.PropertyEditor;
@@ -45,18 +46,7 @@ public class AbstractProperties implements Properties, Cloneable {
     @Override
     public void setProperty(String name, String value) {
         try {
-            if (name.contains(".")) {
-                String[] parts = name.split("\\.", 2);
-                Object target = getClass().getField(parts[0]).get(this);
-
-                try {
-                    setVariable(target, parts[1], value);
-                } catch (NoSuchFieldException e) {
-                    setMethod(target, parts[1], value);
-                }
-            } else {
-                setVariable(this, name, value);
-            }
+            Ognl.setValue(name, this, value);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
