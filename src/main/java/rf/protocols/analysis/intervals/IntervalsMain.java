@@ -1,6 +1,7 @@
 package rf.protocols.analysis.intervals;
 
 import rf.protocols.core.PacketListener;
+import rf.protocols.external.ognl.PropertiesConfigurer;
 import rf.protocols.external.Adapter;
 import rf.protocols.registry.AdapterRegistry;
 
@@ -15,12 +16,13 @@ public class IntervalsMain {
 
     public static void main(String[] args) throws InterruptedException, IOException {
         final IntervalsSignalListenerProperties properties = new IntervalsSignalListenerProperties();
+        PropertiesConfigurer propertiesConfigurer = new PropertiesConfigurer(properties);
         final ExecutorService printService = Executors.newSingleThreadExecutor();
 
         // load properties
         String propertiesFile = System.getProperty("propertiesFile");
         if (propertiesFile != null)
-            properties.loadFromFile(propertiesFile);
+            propertiesConfigurer.loadFromFile(propertiesFile);
 
         IntervalsSignalListener intervalSignalListener = new IntervalsSignalListener(new PacketListener<IntervalsPacket>() {
             @Override

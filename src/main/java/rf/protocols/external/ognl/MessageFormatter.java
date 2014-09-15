@@ -6,7 +6,7 @@ import ognl.OgnlException;
 /**
  * @author Eugene Schava <eschava@gmail.com>
  */
-public class OgnlMessageFormatter {
+public class MessageFormatter {
 
     public static String format(String template, Object root) {
         StringBuilder buf = new StringBuilder();

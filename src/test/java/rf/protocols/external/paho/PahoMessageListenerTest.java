@@ -1,8 +1,8 @@
 package rf.protocols.external.paho;
 
 import org.junit.Test;
-import rf.protocols.external.ognl.OgnlMessageFormatter;
-import rf.protocols.external.ognl.OgnlObjectPropertyAccessor;
+import rf.protocols.external.ognl.MessageFormatter;
+import rf.protocols.external.ognl.MissingObjectPropertyAccessor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +15,7 @@ import static org.junit.Assert.assertEquals;
 public class PahoMessageListenerTest {
     @Test
     public void testTopicTemplate() throws Exception {
-        OgnlObjectPropertyAccessor.install();
+        MissingObjectPropertyAccessor.install();
 
         assertEquals("/rf/Temperature", format("/rf/${field}", new TestMessage(), "Temperature"));
         assertEquals("/rf/ch1/Temperature", format("/rf/ch${message.channel}/${field}", new TestMessage(), "Temperature"));
@@ -28,7 +28,7 @@ public class PahoMessageListenerTest {
         Map<String, Object> root = new HashMap<String, Object>(2);
         root.put("message", message);
         root.put("field", field);
-        return OgnlMessageFormatter.format(template, root);
+        return MessageFormatter.format(template, root);
     }
 
     private static class TestMessage {

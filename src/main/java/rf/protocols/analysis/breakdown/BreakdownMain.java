@@ -1,6 +1,8 @@
 package rf.protocols.analysis.breakdown;
 
 import rf.protocols.core.PacketListener;
+import rf.protocols.external.ognl.PropertiesConfigurer;
+import rf.protocols.external.ognl.PropertiesWithAdapterConfigurer;
 import rf.protocols.external.Adapter;
 import rf.protocols.registry.AdapterRegistry;
 
@@ -12,14 +14,15 @@ import java.io.IOException;
 public class BreakdownMain {
 
     public static void main(String[] args) throws InterruptedException, IOException {
-        final BreakdownSignalListenerProperties properties = new BreakdownSignalListenerProperties();
+        final BreakdownProtocolProperties properties = new BreakdownProtocolProperties();
+        PropertiesConfigurer propertiesConfigurer = new PropertiesWithAdapterConfigurer(properties);
 
         // load properties
         String propertiesFile = System.getProperty("propertiesFile");
         if (propertiesFile != null)
-            properties.loadFromFile(propertiesFile);
+            propertiesConfigurer.loadFromFile(propertiesFile);
         // load listener properties from -Dlistener.PROP parameters
-        properties.loadFromSystemProperties("listener.");
+        propertiesConfigurer.loadFromSystemProperties("listener.");
 
         BreakdownSignalListener debugGroupsSignalListener = new BreakdownSignalListener(new PacketListener<BreakdownPacket>() {
             @Override
@@ -38,7 +41,7 @@ public class BreakdownMain {
         Thread.sleep(1000 * 1000 * 1000l);
     }
 
-    private static void printHeader(BreakdownSignalListenerProperties properties) {
+    private static void printHeader(BreakdownProtocolProperties properties) {
         int length = properties.minLength;
         int diff = (properties.maxLength - properties.minLength) / properties.groupCount;
 
@@ -57,7 +60,7 @@ public class BreakdownMain {
         System.out.println();
     }
 
-    private static void printPacket(BreakdownSignalListenerProperties properties, BreakdownPacket packet) {
+    private static void printPacket(BreakdownProtocolProperties properties, BreakdownPacket packet) {
         if (properties.minLength > 0) {
             System.out.print(packet.getLessThanGrouppedCount());
             System.out.print("\t");

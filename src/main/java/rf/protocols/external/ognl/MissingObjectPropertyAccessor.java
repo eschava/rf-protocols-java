@@ -10,10 +10,10 @@ import java.util.Map;
 /**
  * @author Eugene Schava <eschava@gmail.com>
  */
-public class OgnlObjectPropertyAccessor extends ObjectPropertyAccessor {
+public class MissingObjectPropertyAccessor extends ObjectPropertyAccessor {
 
     public static void install() {
-        OgnlRuntime.setPropertyAccessor(Object.class, new OgnlObjectPropertyAccessor());
+        OgnlRuntime.setPropertyAccessor(Object.class, new MissingObjectPropertyAccessor());
     }
 
     @Override

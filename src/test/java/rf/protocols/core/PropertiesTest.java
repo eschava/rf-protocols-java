@@ -1,8 +1,11 @@
 package rf.protocols.core;
 
 import org.junit.Test;
-import rf.protocols.core.impl.AbstractProperties;
-import rf.protocols.core.impl.ResizeableArrayList;
+import rf.protocols.core.impl.*;
+import rf.protocols.external.Adapter;
+import rf.protocols.external.ognl.*;
+import rf.protocols.registry.AdapterRegistry;
+import rf.protocols.registry.StringMessageSenderRegistry;
 
 import java.util.List;
 
@@ -14,27 +17,43 @@ import static junit.framework.TestCase.assertEquals;
 public class PropertiesTest {
     @Test
     public void test() throws Exception {
+        AdapterRegistry.getInstance().registerAdapter("test", TestAdapter.class);
+
         Properties props = new Properties();
-        props.setProperty("prop1", "20");
+        PropertiesConfigurer propertiesConfigurer = new PropertiesWithAdapterConfigurer(props);
+        propertiesConfigurer.setProperty("prop1", "20");
         assertEquals(20, props.prop1);
-        props.setProperty("interval.max", "40");
+        propertiesConfigurer.setProperty("interval.max", "40");
         assertEquals(40, props.interval.getMax());
-        props.setProperty("interval.delta", "15");
+        propertiesConfigurer.setProperty("interval.delta", "15");
         assertEquals(45, props.interval.getMax());
         assertEquals(15, props.interval.getMin());
-        props.setProperty("interval.tolerance", "0.2");
+        propertiesConfigurer.setProperty("interval.tolerance", "0.2");
         assertEquals(36, props.interval.getMax());
         assertEquals(24, props.interval.getMin());
 
-        props.setProperty("ar[0].value", "10");
+        propertiesConfigurer.setProperty("ar[0].value", "10");
         assertEquals(10, props.ar.get(0).value);
+
+        // test adapter
+        propertiesConfigurer.setProperty("adapter", "test");
+        propertiesConfigurer.setProperty("adapter.param", "test2");
+        assertEquals("test2", TestAdapter.param);
+
+        // test protocol
+        propertiesConfigurer.setProperty("protocol.RemoteSwitch.packetSize", "102"); // no exception
+        propertiesConfigurer.setProperty("protocol.OregonSL109.zeroLength.med", "100"); // no exception
+
+        // test protocol clone
+        propertiesConfigurer.setProperty("protocol.RemoteSwitch.clone", "rs2");
+        StringMessageSenderRegistry.getInstance().sendMessage("rs2", "10", new TestSender()); // no exception
     }
 
     public static class Properties extends AbstractProperties {
         public int prop1 = 10;
         public Interval interval = new Interval(20, 30);
-
         public List<ArrayProperty> ar = new ResizeableArrayList<ArrayProperty>(1, new ArrayPropertyFactory());
+        public String adapter;
 
         public static class ArrayProperty {
             public int value;
@@ -45,6 +64,42 @@ public class PropertiesTest {
             public ArrayProperty create(int index) {
                 return new ArrayProperty();
             }
+        }
+    }
+
+    public static class TestAdapter implements Adapter {
+        private static String param;
+
+        @Override
+        public String getName() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void setProperty(String name, String value) {
+            assertEquals("param", name);
+            param = value;
+        }
+
+        @Override
+        public void addListener(String pin, SignalLengthListener listener) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void addListener(String pin, SignalLevelListener listener) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public SignalLengthSender getSignalSender(String pin) {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    private class TestSender implements SignalLengthSender {
+        @Override
+        public void send(boolean high, long lengthInMicros) {
         }
     }
 }

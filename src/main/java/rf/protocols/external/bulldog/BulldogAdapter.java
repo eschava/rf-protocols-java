@@ -9,6 +9,7 @@ import org.bulldog.cubieboard.Cubieboard;
 import rf.protocols.core.SignalLengthListener;
 import rf.protocols.core.SignalLengthSender;
 import rf.protocols.core.SignalLevelListener;
+import rf.protocols.external.ognl.PropertiesConfigurer;
 import rf.protocols.core.impl.SignalLengthAdapterLevelListener;
 import rf.protocols.external.Adapter;
 
@@ -18,6 +19,7 @@ import rf.protocols.external.Adapter;
 public class BulldogAdapter implements Adapter {
     private final Board board;
     private final BulldogAdapterProperties properties = new BulldogAdapterProperties();
+    private final PropertiesConfigurer propertiesConfigurer = new PropertiesConfigurer(properties);
 
     public BulldogAdapter() {
         board = Platform.createBoard();
@@ -30,7 +32,7 @@ public class BulldogAdapter implements Adapter {
 
     @Override
     public void setProperty(String name, String value) {
-        properties.setProperty(name, value);
+        propertiesConfigurer.setProperty(name, value);
     }
 
     @Override

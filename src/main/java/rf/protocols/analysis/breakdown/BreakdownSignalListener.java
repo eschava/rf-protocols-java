@@ -12,7 +12,7 @@ import java.util.TimerTask;
 public class BreakdownSignalListener extends TimerTask implements SignalLengthListener {
 
     private PacketListener<BreakdownPacket> packetListener;
-    private BreakdownSignalListenerProperties properties = new BreakdownSignalListenerProperties();
+    private BreakdownProtocolProperties properties = new BreakdownProtocolProperties();
     private BreakdownPacket packet;
 
     public BreakdownSignalListener(PacketListener<BreakdownPacket> packetListener) {
@@ -44,11 +44,11 @@ public class BreakdownSignalListener extends TimerTask implements SignalLengthLi
         packet.clear();
     }
 
-    public BreakdownSignalListenerProperties getProperties() {
+    public BreakdownProtocolProperties getProperties() {
         return properties;
     }
 
-    public void setProperties(BreakdownSignalListenerProperties properties) {
+    public void setProperties(BreakdownProtocolProperties properties) {
         this.properties = properties;
     }
 }

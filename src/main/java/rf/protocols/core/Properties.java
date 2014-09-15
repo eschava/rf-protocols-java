@@ -6,6 +6,5 @@ package rf.protocols.core;
  * @author Eugene Schava <eschava@gmail.com>
  */
 public interface Properties {
-    void setProperty(String name, String value);
     Properties clone();
 }

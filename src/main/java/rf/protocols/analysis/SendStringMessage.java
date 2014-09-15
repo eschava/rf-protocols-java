@@ -2,9 +2,10 @@ package rf.protocols.analysis;
 
 import rf.protocols.core.SignalLengthSender;
 import rf.protocols.core.impl.AbstractProperties;
+import rf.protocols.external.ognl.PropertiesConfigurer;
+import rf.protocols.external.ognl.PropertiesWithAdapterConfigurer;
 import rf.protocols.external.Adapter;
 import rf.protocols.registry.AdapterRegistry;
-import rf.protocols.registry.ProtocolConfigurer;
 import rf.protocols.registry.StringMessageSenderRegistry;
 
 import java.io.IOException;
@@ -21,8 +22,9 @@ public class SendStringMessage {
 
         // load properties
         Properties properties = new Properties();
+        PropertiesConfigurer propertiesConfigurer = new PropertiesWithAdapterConfigurer(properties);
         if (propertiesFile != null)
-            properties.loadFromFile(propertiesFile);
+            propertiesConfigurer.loadFromFile(propertiesFile);
 
         Adapter adapter = AdapterRegistry.getInstance().getAdapter(properties.adapter);
         SignalLengthSender signalSender = adapter.getSignalSender(properties.pin);
@@ -33,24 +35,5 @@ public class SendStringMessage {
     public static class Properties extends AbstractProperties {
         public String adapter;
         public String pin;
-
-        @Override
-        public void setProperty(String name, String value) {
-            if (!name.contains(".")) {
-                super.setProperty(name, value);
-                return;
-            }
-
-            String[] parts = name.split("\\.", 2);
-            String protocol = parts[0];
-            name = parts[1];
-
-            if (protocol.equals("adapter")) {
-                Adapter adptr = AdapterRegistry.getInstance().getAdapter(adapter);
-                adptr.setProperty(name, value);
-            } else {
-                ProtocolConfigurer.setProtocolProperty(protocol, name, value);
-            }
-        }
     }
 }

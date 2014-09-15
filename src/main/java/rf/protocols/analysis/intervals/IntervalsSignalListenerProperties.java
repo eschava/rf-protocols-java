@@ -3,8 +3,6 @@ package rf.protocols.analysis.intervals;
 import rf.protocols.core.Properties;
 import rf.protocols.core.impl.AbstractProperties;
 import rf.protocols.core.impl.ResizeableArrayList;
-import rf.protocols.external.Adapter;
-import rf.protocols.registry.AdapterRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,16 +32,6 @@ public class IntervalsSignalListenerProperties extends AbstractProperties {
             if (in.isInside(l))
                 return in.getName(l, level);
         return null;
-    }
-
-    @Override
-    public void setProperty(String name, String value) {
-        if (name.startsWith("adapter.")) {
-            Adapter adptr = AdapterRegistry.getInstance().getAdapter(adapter);
-            adptr.setProperty(name.substring("adapter.".length()), value);
-        } else {
-            super.setProperty(name, value);
-        }
     }
 
     @Override

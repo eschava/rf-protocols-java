@@ -1,6 +1,7 @@
 package rf.protocols.device.generic.intervalsequence;
 
 import org.junit.Test;
+import rf.protocols.external.ognl.PropertiesConfigurer;
 import rf.protocols.device.generic.intervals.IntervalsPacket;
 
 import static org.junit.Assert.assertEquals;
@@ -10,14 +11,15 @@ public class IntervalSequenceMessageFactoryTest {
     @Test
     public void testCreateMessage() throws Exception {
         IntervalSequenceProtocolProperties props = new IntervalSequenceProtocolProperties();
-        props.setProperty("prefix", "00");
-        props.setProperty("postfix", "11");
-        props.setProperty("sequence[0].name", "A");
-        props.setProperty("sequence[0].sequence", "01");
-        props.setProperty("sequence[1].name", "a");
-        props.setProperty("sequence[1].sequence", "010");
-        props.setProperty("sequence[2].name", "B");
-        props.setProperty("sequence[2].sequence", "10");
+        PropertiesConfigurer propertiesConfigurer = new PropertiesConfigurer(props);
+        propertiesConfigurer.setProperty("prefix", "00");
+        propertiesConfigurer.setProperty("postfix", "11");
+        propertiesConfigurer.setProperty("sequence[0].name", "A");
+        propertiesConfigurer.setProperty("sequence[0].sequence", "01");
+        propertiesConfigurer.setProperty("sequence[1].name", "a");
+        propertiesConfigurer.setProperty("sequence[1].sequence", "010");
+        propertiesConfigurer.setProperty("sequence[2].name", "B");
+        propertiesConfigurer.setProperty("sequence[2].sequence", "10");
 
         IntervalSequenceMessageFactory factory = new IntervalSequenceMessageFactory("test", props);
         assertEquals(null, factory.createMessage(new IntervalsPacket(""))); // empty

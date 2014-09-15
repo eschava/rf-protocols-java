@@ -4,7 +4,16 @@ package rf.protocols.registry;
  * @author Eugene Schava <eschava@gmail.com>
  */
 public class ProtocolConfigurer {
-    public static void setProtocolProperty(String protocol, String property, String value) {
+    private static final ProtocolConfigurer INSTANCE = new ProtocolConfigurer();
+
+    public static ProtocolConfigurer getInstance() {
+        return INSTANCE;
+    }
+
+    private ProtocolConfigurer() {
+    }
+
+    public void setProtocolProperty(String protocol, String property, String value) {
         // for using artificial property like CurrentName.clone=NewName
         if (property.equals("clone")) {
             cloneProtocol(protocol, value);

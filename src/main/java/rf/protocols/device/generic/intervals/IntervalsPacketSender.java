@@ -2,6 +2,7 @@ package rf.protocols.device.generic.intervals;
 
 import rf.protocols.core.PacketSender;
 import rf.protocols.core.SignalLengthSender;
+import rf.protocols.external.ognl.PropertiesConfigurer;
 
 import java.util.Map;
 
@@ -10,6 +11,7 @@ import java.util.Map;
  */
 public class IntervalsPacketSender implements PacketSender<IntervalsPacket>, Cloneable {
     private IntervalsSignalListenerProperties properties = new IntervalsSignalListenerProperties();
+    private PropertiesConfigurer propertiesConfigurer = new PropertiesConfigurer(properties);
 
     public IntervalsSignalListenerProperties getProperties() {
         return properties;
@@ -17,11 +19,12 @@ public class IntervalsPacketSender implements PacketSender<IntervalsPacket>, Clo
 
     public void setProperties(IntervalsSignalListenerProperties properties) {
         this.properties = properties;
+        propertiesConfigurer = new PropertiesConfigurer(properties);
     }
 
     @Override
     public void setProperty(String property, String value) {
-        properties.setProperty(property, value);
+        propertiesConfigurer.setProperty(property, value);
     }
 
     public void send(IntervalsPacket packet, SignalLengthSender signalSender) {

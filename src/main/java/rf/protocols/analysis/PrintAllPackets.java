@@ -4,10 +4,11 @@ import rf.protocols.core.Packet;
 import rf.protocols.core.PacketListener;
 import rf.protocols.core.SignalLevelListener;
 import rf.protocols.core.impl.AbstractProperties;
+import rf.protocols.external.ognl.PropertiesConfigurer;
+import rf.protocols.external.ognl.PropertiesWithAdapterConfigurer;
 import rf.protocols.core.impl.SignalLevelListenerGroup;
 import rf.protocols.external.Adapter;
 import rf.protocols.registry.AdapterRegistry;
-import rf.protocols.registry.ProtocolConfigurer;
 import rf.protocols.registry.SignalListenerRegistry;
 
 import java.io.IOException;
@@ -25,11 +26,12 @@ public class PrintAllPackets {
         SignalListenerRegistry registry = SignalListenerRegistry.getInstance();
         final ExecutorService printService = Executors.newSingleThreadExecutor();
         Properties properties = new Properties();
+        PropertiesConfigurer propertiesConfigurer = new PropertiesWithAdapterConfigurer(properties);
 
         // load properties
         String propertiesFile = System.getProperty("propertiesFile");
         if (propertiesFile != null)
-            properties.loadFromFile(propertiesFile);
+            propertiesConfigurer.loadFromFile(propertiesFile);
 
         Collection<SignalLevelListener> listeners = new ArrayList<SignalLevelListener>();
         SignalLevelListenerGroup listenerGroup = new SignalLevelListenerGroup(listeners);
@@ -64,24 +66,5 @@ public class PrintAllPackets {
     public static class Properties extends AbstractProperties {
         public String adapter;
         public String pin;
-
-        @Override
-        public void setProperty(String name, String value) {
-            if (!name.contains(".")) {
-                super.setProperty(name, value);
-                return;
-            }
-
-            String[] parts = name.split("\\.", 2);
-            String protocol = parts[0];
-            name = parts[1];
-
-            if (protocol.equals("adapter")) {
-                Adapter adptr = AdapterRegistry.getInstance().getAdapter(adapter);
-                adptr.setProperty(name, value);
-            } else {
-                ProtocolConfigurer.setProtocolProperty(protocol, name, value);
-            }
-        }
     }
 }

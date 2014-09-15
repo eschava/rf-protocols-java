@@ -2,12 +2,14 @@ package rf.protocols.device.remoteswitch;
 
 import rf.protocols.core.PacketSender;
 import rf.protocols.core.SignalLengthSender;
+import rf.protocols.external.ognl.PropertiesConfigurer;
 
 /**
  * @author Eugene Schava <eschava@gmail.com>
  */
 public class RemoteSwitchPacketSender implements PacketSender<RemoteSwitchPacket>, Cloneable {
     private RemoteSwitchSignalListenerProperties properties = new RemoteSwitchSignalListenerProperties();
+    private PropertiesConfigurer propertiesConfigurer = new PropertiesConfigurer(properties);
 
     public RemoteSwitchSignalListenerProperties getProperties() {
         return properties;
@@ -15,11 +17,12 @@ public class RemoteSwitchPacketSender implements PacketSender<RemoteSwitchPacket
 
     public void setProperties(RemoteSwitchSignalListenerProperties properties) {
         this.properties = properties;
+        propertiesConfigurer = new PropertiesConfigurer(properties);
     }
 
     @Override
     public void setProperty(String property, String value) {
-        properties.setProperty(property, value);
+        propertiesConfigurer.setProperty(property, value);
     }
 
     public void send(RemoteSwitchPacket packet, SignalLengthSender signalSender) {

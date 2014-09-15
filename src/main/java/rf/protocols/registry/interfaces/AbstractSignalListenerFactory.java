@@ -1,6 +1,7 @@
 package rf.protocols.registry.interfaces;
 
 import rf.protocols.core.Properties;
+import rf.protocols.external.ognl.PropertiesConfigurer;
 
 /**
  * Helper implementation of {@link SignalListenerFactory}
@@ -12,10 +13,12 @@ public abstract class AbstractSignalListenerFactory<Factory extends SignalListen
 
     private String protocol;
     private Props properties;
+    private PropertiesConfigurer propertiesConfigurer;
 
     public AbstractSignalListenerFactory(String protocol, Props properties) {
         this.protocol = protocol;
         this.properties = properties;
+        propertiesConfigurer = new PropertiesConfigurer(properties);
     }
 
     @Override
@@ -29,7 +32,7 @@ public abstract class AbstractSignalListenerFactory<Factory extends SignalListen
 
     @Override
     public void setProperty(String property, String value) {
-        properties.setProperty(property, value);
+        propertiesConfigurer.setProperty(property, value);
     }
 
     @Override

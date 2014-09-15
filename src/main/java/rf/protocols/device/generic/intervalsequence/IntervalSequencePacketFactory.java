@@ -1,6 +1,7 @@
 package rf.protocols.device.generic.intervalsequence;
 
 import rf.protocols.core.PacketFactory;
+import rf.protocols.external.ognl.PropertiesConfigurer;
 import rf.protocols.core.message.StringMessage;
 import rf.protocols.device.generic.intervals.IntervalsPacket;
 
@@ -11,6 +12,7 @@ import java.util.Map;
  */
 public class IntervalSequencePacketFactory implements PacketFactory<IntervalsPacket, StringMessage>, Cloneable {
     private IntervalSequenceProtocolProperties properties = new IntervalSequenceProtocolProperties();
+    private PropertiesConfigurer propertiesConfigurer = new PropertiesConfigurer(properties);
 
     @Override
     public IntervalsPacket createPacket(StringMessage message) {
@@ -30,7 +32,7 @@ public class IntervalSequencePacketFactory implements PacketFactory<IntervalsPac
 
     @Override
     public void setProperty(String property, String value) {
-        properties.setProperty(property, value);
+        propertiesConfigurer.setProperty(property, value);
     }
 
     @Override

@@ -7,6 +7,8 @@ import rf.protocols.core.Message;
 import rf.protocols.core.MessageListener;
 import rf.protocols.core.SignalLengthSender;
 import rf.protocols.core.SignalLevelListener;
+import rf.protocols.external.ognl.PropertiesConfigurer;
+import rf.protocols.external.ognl.PropertiesWithAdapterConfigurer;
 import rf.protocols.external.Adapter;
 import rf.protocols.registry.AdapterRegistry;
 import rf.protocols.registry.SignalListenerRegistry;
@@ -24,10 +26,11 @@ public class MqttMain {
     public static void main(String[] args) throws InterruptedException, MqttException, IOException {
         SignalListenerRegistry listenerRegistry = SignalListenerRegistry.getInstance();
         MqttProperties properties = new MqttProperties();
+        PropertiesConfigurer propertiesConfigurer = new PropertiesWithAdapterConfigurer(properties);
 
         String propertiesFile = System.getProperty("propertiesFile");
         if (propertiesFile != null)
-            properties.loadFromFile(propertiesFile);
+            propertiesConfigurer.loadFromFile(propertiesFile);
 
         MqttClient mqttClient = new MqttClient(properties.mqttUrl, properties.mqttClientId);
         MqttConnectOptions mqttConnectOptions = new MqttConnectOptions();

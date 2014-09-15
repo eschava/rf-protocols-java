@@ -4,6 +4,7 @@ import com.pi4j.io.gpio.*;
 import rf.protocols.core.SignalLengthListener;
 import rf.protocols.core.SignalLengthSender;
 import rf.protocols.core.SignalLevelListener;
+import rf.protocols.external.ognl.PropertiesConfigurer;
 import rf.protocols.core.impl.SignalLengthAdapterLevelListener;
 import rf.protocols.external.Adapter;
 
@@ -12,6 +13,7 @@ import rf.protocols.external.Adapter;
  */
 public class PI4JAdapter implements Adapter {
     private PI4JAdapterProperties properties = new PI4JAdapterProperties();
+    private PropertiesConfigurer propertiesConfigurer = new PropertiesConfigurer(properties);
 
     @Override
     public String getName() {
@@ -20,7 +22,7 @@ public class PI4JAdapter implements Adapter {
 
     @Override
     public void setProperty(String name, String value) {
-        properties.setProperty(name, value);
+        propertiesConfigurer.setProperty(name, value);
     }
 
     @Override

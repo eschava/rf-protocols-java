@@ -5,8 +5,8 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import rf.protocols.core.Message;
 import rf.protocols.core.MessageListener;
 import rf.protocols.core.MessageMetaData;
-import rf.protocols.external.ognl.OgnlMessageFormatter;
-import rf.protocols.external.ognl.OgnlObjectPropertyAccessor;
+import rf.protocols.external.ognl.MessageFormatter;
+import rf.protocols.external.ognl.MissingObjectPropertyAccessor;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public class PahoMessageListener implements MessageListener<Message> {
     static {
-        OgnlObjectPropertyAccessor.install();
+        MissingObjectPropertyAccessor.install();
     }
 
     private final MqttClient client;
@@ -52,6 +52,6 @@ public class PahoMessageListener implements MessageListener<Message> {
         Map<String, Object> root = new HashMap<String, Object>(2);
         root.put("message", message);
         root.put("field", fieldName);
-        return OgnlMessageFormatter.format(topicTemplate, root);
+        return MessageFormatter.format(topicTemplate, root);
     }
 }

@@ -25,7 +25,7 @@ public class AdapterRegistry {
         registerAdapter("pi4j", PI4JAdapter.class);
     }
 
-    private void registerAdapter(String name, Class<? extends Adapter> adapterClass) {
+    public void registerAdapter(String name, Class<? extends Adapter> adapterClass) {
         adapterClassMap.put(name, adapterClass);
     }
 
