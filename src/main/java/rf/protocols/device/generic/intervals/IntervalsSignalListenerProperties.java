@@ -21,7 +21,7 @@ public class IntervalsSignalListenerProperties extends AbstractProperties {
     public List<NamedInterval> interval = new ResizeableArrayList<NamedInterval>(new NamedIntervalFactory());
 
     // sender properties
-    public int repeats = 8;
+    public int repeats = 1;
 
     public boolean isSeparator(long l, boolean high) {
         return separatorInterval.isInside(l) && high == separatorIsHigh;

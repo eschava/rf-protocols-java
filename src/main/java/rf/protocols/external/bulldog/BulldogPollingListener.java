@@ -30,8 +30,8 @@ public class BulldogPollingListener implements Runnable {
                 oldValue = value;
             }
             long sleep = nextRead - System.nanoTime();
-            if (sleep > 0)
-                NativeTools.sleepNanos((int) sleep);
+            if (sleep > 1000)
+                NativeTools.sleepMicros((int) (sleep / 1000));
         }
     }
 }
