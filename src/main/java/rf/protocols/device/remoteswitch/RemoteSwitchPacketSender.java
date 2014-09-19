@@ -81,6 +81,7 @@ public class RemoteSwitchPacketSender implements PacketSender<RemoteSwitchPacket
         try {
             RemoteSwitchPacketSender clone = (RemoteSwitchPacketSender) super.clone();
             clone.properties = (RemoteSwitchSignalListenerProperties) properties.clone();
+            clone.propertiesConfigurer = new PropertiesConfigurer(clone.properties);
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);

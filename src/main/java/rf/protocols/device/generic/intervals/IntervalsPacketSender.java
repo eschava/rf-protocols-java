@@ -54,6 +54,7 @@ public class IntervalsPacketSender implements PacketSender<IntervalsPacket>, Clo
         try {
             IntervalsPacketSender clone = (IntervalsPacketSender) super.clone();
             clone.properties = (IntervalsSignalListenerProperties) properties.clone();
+            clone.propertiesConfigurer = new PropertiesConfigurer(clone.properties);
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);

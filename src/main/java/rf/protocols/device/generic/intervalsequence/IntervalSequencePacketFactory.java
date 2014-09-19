@@ -40,6 +40,7 @@ public class IntervalSequencePacketFactory implements PacketFactory<IntervalsPac
         try {
             IntervalSequencePacketFactory clone = (IntervalSequencePacketFactory) super.clone();
             clone.properties = (IntervalSequenceProtocolProperties) properties.clone();
+            clone.propertiesConfigurer = new PropertiesConfigurer(clone.properties);
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);

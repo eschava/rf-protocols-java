@@ -41,6 +41,7 @@ public abstract class AbstractSignalListenerFactory<Factory extends SignalListen
             AbstractSignalListenerFactory clone = (AbstractSignalListenerFactory) super.clone();
             clone.protocol = newProtocolName;
             clone.properties = properties.clone();
+            clone.propertiesConfigurer = new PropertiesConfigurer(clone.properties);
             return (Factory) clone;
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);

@@ -3,6 +3,7 @@ package rf.protocols.analysis.intervals;
 import rf.protocols.core.PacketListener;
 import rf.protocols.external.ognl.PropertiesConfigurer;
 import rf.protocols.external.Adapter;
+import rf.protocols.external.ognl.PropertiesWithAdapterConfigurer;
 import rf.protocols.registry.AdapterRegistry;
 
 import java.io.IOException;
@@ -16,7 +17,7 @@ public class IntervalsMain {
 
     public static void main(String[] args) throws InterruptedException, IOException {
         final IntervalsSignalListenerProperties properties = new IntervalsSignalListenerProperties();
-        PropertiesConfigurer propertiesConfigurer = new PropertiesConfigurer(properties);
+        PropertiesConfigurer propertiesConfigurer = new PropertiesWithAdapterConfigurer(properties);
         final ExecutorService printService = Executors.newSingleThreadExecutor();
 
         // load properties

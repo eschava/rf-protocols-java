@@ -24,7 +24,19 @@ public class ProtocolRegistryConfigurerPropertyAccessor implements PropertyAcces
 
     @Override
     public void setProperty(Map context, Object target, Object name, Object value) throws OgnlException {
-        throw new UnsupportedOperationException();
+        String valueStr = value.toString();
+        // for using artificial property like NewName=CurrentName.clone
+        if (valueStr.endsWith(".clone"))
+        {
+            String sourceProtocol = valueStr.substring(0, valueStr.length() - ".clone".length());
+            String targetProtocol = name.toString();
+
+            ProtocolConfigurer.getInstance().cloneProtocol(sourceProtocol, targetProtocol);
+        }
+        else
+        {
+            throw new UnsupportedOperationException();
+        }
     }
 
     @Override

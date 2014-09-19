@@ -47,7 +47,7 @@ public class PropertiesTest {
         propertiesConfigurer.setProperty("protocol.OregonSL109.zeroLength.med", "100"); // no exception
 
         // test protocol clone
-        propertiesConfigurer.setProperty("protocol.RemoteSwitch.clone", "rs2");
+        propertiesConfigurer.setProperty("protocol.rs2", "RemoteSwitch.clone");
         StringMessageSenderRegistry.getInstance().sendMessage("rs2", "10", new TestSender()); // no exception
     }
 
