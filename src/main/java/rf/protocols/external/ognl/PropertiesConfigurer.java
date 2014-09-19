@@ -1,6 +1,7 @@
 package rf.protocols.external.ognl;
 
 import ognl.Ognl;
+import ognl.OgnlContext;
 import ognl.OgnlException;
 import ognl.PropertyAccessor;
 import rf.protocols.core.impl.LinkedProperties;
@@ -47,7 +48,10 @@ public class PropertiesConfigurer {
 
     public void setProperty(String name, String value) {
         try {
-            Ognl.setValue(name, this, value);
+//            Ognl.setValue(name, this, value);
+            // fix for boolean to string Ognl converter
+            Map context = Ognl.addDefaultContext(this, null, new CustomTypeConverter(), null, new OgnlContext());
+            Ognl.setValue(Ognl.parseExpression(name), context, this, value);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

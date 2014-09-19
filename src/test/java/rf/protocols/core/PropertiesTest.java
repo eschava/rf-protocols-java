@@ -38,7 +38,9 @@ public class PropertiesTest {
         // test adapter
         propertiesConfigurer.setProperty("adapter", "test");
         propertiesConfigurer.setProperty("adapter.param", "test2");
-        assertEquals("test2", TestAdapter.param);
+        propertiesConfigurer.setProperty("adapter.bool", "false");
+        assertEquals("test2", TestAdapter.props.param);
+        assertEquals(false, TestAdapter.props.bool);
 
         // test protocol
         propertiesConfigurer.setProperty("protocol.RemoteSwitch.packetSize", "102"); // no exception
@@ -68,7 +70,8 @@ public class PropertiesTest {
     }
 
     public static class TestAdapter implements Adapter {
-        private static String param;
+        public static Props props = new Props();
+        private final PropertiesConfigurer propertiesConfigurer = new PropertiesConfigurer(props);
 
         @Override
         public String getName() {
@@ -77,8 +80,7 @@ public class PropertiesTest {
 
         @Override
         public void setProperty(String name, String value) {
-            assertEquals("param", name);
-            param = value;
+            propertiesConfigurer.setProperty(name, value);
         }
 
         @Override
@@ -94,6 +96,12 @@ public class PropertiesTest {
         @Override
         public SignalLengthSender getSignalSender(String pin) {
             throw new UnsupportedOperationException();
+        }
+
+        public static class Props
+        {
+            public String param;
+            public boolean bool = false;
         }
     }
 
