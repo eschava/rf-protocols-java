@@ -3,16 +3,16 @@ package rf.protocols.external.ognl;
 /**
  * @author Eugene Schava <eschava@gmail.com>
  */
-public class ProtocolPropertyWrapper {
-    private String protocol;
+public class AdapterPropertyWrapper {
+    private String adapter;
     private StringBuilder name = new StringBuilder();
 
-    public ProtocolPropertyWrapper(String protocol) {
-        this.protocol = protocol;
+    public AdapterPropertyWrapper(String adapter) {
+        this.adapter = adapter;
     }
 
-    public String getProtocol() {
-        return protocol;
+    public String getAdapter() {
+        return adapter;
     }
 
     public void addProperty(Object property) {

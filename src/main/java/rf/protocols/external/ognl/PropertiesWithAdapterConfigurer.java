@@ -2,7 +2,6 @@ package rf.protocols.external.ognl;
 
 import ognl.OgnlException;
 import ognl.PropertyAccessor;
-import rf.protocols.registry.AdapterRegistry;
 import rf.protocols.registry.ProtocolConfigurer;
 
 import java.util.Map;
@@ -14,9 +13,9 @@ public class PropertiesWithAdapterConfigurer extends PropertiesConfigurer {
     static {
 //        MissingObjectPropertyAccessor.install();
         PropertiesConfigurerPropertyAccessor.install();
-        AdapterPropertyAccessor.install();
         ProtocolRegistryConfigurerPropertyAccessor.install();
         ProtocolPropertyWrapperPropertyAccessor.install();
+        AdapterPropertyWrapperPropertyAccessor.install();
     }
 
     private String adapter;
@@ -36,7 +35,7 @@ public class PropertiesWithAdapterConfigurer extends PropertiesConfigurer {
     @Override
     protected Object getProperty(PropertyAccessor accessor, Map context, Object name) throws OgnlException {
         if (name.equals("adapter"))
-            return AdapterRegistry.getInstance().getAdapter(adapter);
+            return new AdapterPropertyWrapper(adapter);
 
         if (name.equals("protocol"))
             return ProtocolConfigurer.getInstance();
