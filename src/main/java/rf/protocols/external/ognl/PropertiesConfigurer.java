@@ -38,10 +38,16 @@ public class PropertiesConfigurer {
         }
     }
 
-    protected void loadFromProperties(java.util.Properties props) {
+    protected void loadFromProperties(java.util.Properties props) throws IOException {
         for (String key : props.stringPropertyNames())
         {
             String value = props.getProperty(key);
+            // include external file there is instruction in properties like
+            // include filename.ext
+            if (key.equals("include")) {
+                loadFromFile(value);
+                continue;
+            }
             setProperty(key, value);
         }
     }
