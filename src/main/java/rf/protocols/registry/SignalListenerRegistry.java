@@ -6,6 +6,7 @@ import rf.protocols.core.impl.SignalLengthListenerGroup;
 import rf.protocols.core.impl.SignalLevelListenerGroup;
 import rf.protocols.device.generic.intervals.IntervalsSignalListenerFactory;
 import rf.protocols.device.generic.intervalsequence.IntervalSequenceSignalListenerFactory;
+import rf.protocols.device.lacrosse.LacrosseSignalListenerFactory;
 import rf.protocols.device.oregon.sl109.OregonSL109SignalListenerFactory;
 import rf.protocols.device.oregon.v2.OregonV2SignalListenerFactory;
 import rf.protocols.device.owl.OwlSignalListenerFactory;
@@ -40,6 +41,7 @@ public class SignalListenerRegistry {
 //        registerFactory(new OregonV3SignalListenerFactory());
         registerFactory(new OwlSignalListenerFactory());
 //        registerFactory(new PT2262SignalListenerFactory()); // deprecated, use RemoteSwitch
+        registerFactory(new LacrosseSignalListenerFactory());
         registerFactory(new RemoteSwitchSignalListenerFactory());
         registerFactory(new IntervalsSignalListenerFactory());
         registerFactory(new IntervalSequenceSignalListenerFactory());
