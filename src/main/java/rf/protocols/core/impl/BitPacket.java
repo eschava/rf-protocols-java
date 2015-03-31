@@ -90,6 +90,24 @@ public class BitPacket implements Packet, Cloneable {
         return sb.toString();
     }
 
+    public String getBin(int fromBit, int toBit) {
+        StringBuilder sb = new StringBuilder();
+
+        if (fromBit <= toBit) {
+            for (int i = fromBit; i <= toBit; i ++) {
+                boolean bit = getBit(i);
+                sb.append(bit ? '1' : '0');
+            }
+        } else {
+            for (int i = fromBit; i >= toBit ; i--) {
+                boolean bit = getBit(i);
+                sb.append(bit ? '1' : '0');
+            }
+        }
+
+        return sb.toString();
+    }
+
     @Override
     public String toString() {
 //        return getHex(0, size - 1);
@@ -117,5 +135,23 @@ public class BitPacket implements Packet, Cloneable {
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public int indexOf(int intValue, int sizeToSearch) {
+        for (int i = 0; i < size - sizeToSearch; i++) {
+            if (getInt(i, i + sizeToSearch - 1) == intValue)
+                return i;
+        }
+        return -1;
+    }
+
+    public BitPacket subpacket(int startIndex, int packetSize) {
+        BitPacket packet = new BitPacket(packetSize);
+        packet.size = packetSize;
+        for (int i = 0; i < packetSize; i++) {
+            if (bitSet.get(i + startIndex))
+                packet.bitSet.set(i);
+        }
+        return packet;
     }
 }

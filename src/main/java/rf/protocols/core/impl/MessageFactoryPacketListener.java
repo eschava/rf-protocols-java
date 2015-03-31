@@ -19,7 +19,11 @@ public class MessageFactoryPacketListener<P extends Packet, M extends Message> i
     @Override
     public void onPacket(P packet) {
         M message = messageFactory.createMessage(packet);
-        if (message != null && message.isValid())
-            messageListener.onMessage(message);
+        if (message != null) {
+            if (message.isValid())
+                messageListener.onMessage(message);
+            else
+                System.out.println("WARN: Cannot create valid message from packet " + packet); // TODO: use some logger
+        }
     }
 }
