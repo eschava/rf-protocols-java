@@ -36,13 +36,13 @@ public class BulldogAdapter implements Adapter {
     }
 
     @Override
-    public void addListener(String pinName, SignalLengthListener listener) {
-        addListener(pinName, new SignalLengthAdapterLevelListener(listener));
+    public void addListener(SignalLengthListener listener) {
+        addListener(new SignalLengthAdapterLevelListener(listener));
     }
 
     @Override
-    public void addListener(String pinName, final SignalLevelListener listener) {
-        Pin pin = getPin(pinName);
+    public void addListener(final SignalLevelListener listener) {
+        Pin pin = getPin(properties.inputPin);
         final DigitalInput input = pin.as(DigitalInput.class);
 
         if (properties.useInterrupts) {
@@ -56,8 +56,8 @@ public class BulldogAdapter implements Adapter {
     }
 
     @Override
-    public SignalLengthSender getSignalSender(String pin) {
-        DigitalOutput output = getPin(pin).as(DigitalOutput.class);
+    public SignalLengthSender getSignalSender() {
+        DigitalOutput output = getPin(properties.outputPin).as(DigitalOutput.class);
         return new BulldogSignalSender(output);
     }
 

@@ -18,7 +18,6 @@ public class IntervalsSignalListenerProperties extends AbstractProperties {
     public String namesSeparator = null;
 
     public String adapter;
-    public String pin;
 
     public boolean isObservableInterval(long l) {
         for (NamedInterval in : interval)

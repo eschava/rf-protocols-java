@@ -84,17 +84,17 @@ public class PropertiesTest {
         }
 
         @Override
-        public void addListener(String pin, SignalLengthListener listener) {
+        public void addListener(SignalLengthListener listener) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public void addListener(String pin, SignalLevelListener listener) {
+        public void addListener(SignalLevelListener listener) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public SignalLengthSender getSignalSender(String pin) {
+        public SignalLengthSender getSignalSender() {
             throw new UnsupportedOperationException();
         }
 

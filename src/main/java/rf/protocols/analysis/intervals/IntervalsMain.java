@@ -42,7 +42,7 @@ public class IntervalsMain {
         intervalSignalListener.start();
 
         Adapter adapter = AdapterRegistry.getInstance().getAdapter(properties.adapter);
-        adapter.addListener(properties.pin, intervalSignalListener);
+        adapter.addListener(intervalSignalListener);
 
         Thread.sleep(Long.MAX_VALUE);
     }

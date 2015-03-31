@@ -12,5 +12,4 @@ public class BreakdownProtocolProperties extends AbstractProperties {
     public int groupCount = 10;
 
     public String adapter;
-    public String pin;
 }

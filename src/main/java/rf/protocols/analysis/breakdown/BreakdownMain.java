@@ -36,7 +36,7 @@ public class BreakdownMain {
         debugGroupsSignalListener.start();
 
         Adapter adapter = AdapterRegistry.getInstance().getAdapter(properties.adapter);
-        adapter.addListener(properties.pin, debugGroupsSignalListener);
+        adapter.addListener(debugGroupsSignalListener);
 
         Thread.sleep(1000 * 1000 * 1000l);
     }

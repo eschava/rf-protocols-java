@@ -49,13 +49,12 @@ public class PrintAllMessages {
         SignalLengthListener signalLengthListener = registry.createListener(messageListener, protocolNames);
 
         Adapter adapter = AdapterRegistry.getInstance().getAdapter(properties.adapter);
-        adapter.addListener(properties.pin, signalLengthListener);
+        adapter.addListener(signalLengthListener);
 
         Thread.sleep(Long.MAX_VALUE);
     }
 
     public static class Properties extends AbstractProperties {
         public String adapter;
-        public String pin;
     }
 }

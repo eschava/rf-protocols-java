@@ -60,13 +60,12 @@ public class PrintAllPackets {
         }
 
         Adapter adapter = AdapterRegistry.getInstance().getAdapter(properties.adapter);
-        adapter.addListener(properties.pin, listenerGroup);
+        adapter.addListener(listenerGroup);
 
         Thread.sleep(Long.MAX_VALUE);
     }
 
     public static class Properties extends AbstractProperties {
         public String adapter;
-        public String pin;
     }
 }

@@ -58,9 +58,9 @@ public class MqttMain {
                 ? listenerRegistry.getProtocolNames()
                 : Arrays.asList(properties.protocolNames.split(","));
         SignalLengthListener signalListener = listenerRegistry.createListener(messageListener, protocolNames);
-        adapter.addListener(properties.inputPin, signalListener);
+        adapter.addListener(signalListener);
 
-        SignalLengthSender signalSender = adapter.getSignalSender(properties.outputPin);
+        SignalLengthSender signalSender = adapter.getSignalSender();
         mqttClient.setCallback(new PahoMessageCallback(mqttClient.log, signalSender, properties.receiveTopicTemplate));
         mqttClient.subscribe(properties.receiveTopicTemplate);
 

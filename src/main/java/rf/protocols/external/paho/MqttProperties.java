@@ -14,6 +14,4 @@ public class MqttProperties extends AbstractProperties {
     public String receiveTopicTemplate = "rf/send/+";
     public String protocolNames = "all";
     public String adapter = null;
-    public String inputPin;
-    public String outputPin;
 }

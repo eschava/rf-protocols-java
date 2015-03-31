@@ -27,13 +27,12 @@ public class SendStringMessage {
             propertiesConfigurer.loadFromFile(propertiesFile);
 
         Adapter adapter = AdapterRegistry.getInstance().getAdapter(properties.adapter);
-        SignalLengthSender signalSender = adapter.getSignalSender(properties.pin);
+        SignalLengthSender signalSender = adapter.getSignalSender();
 
         StringMessageSenderRegistry.getInstance().sendMessage(sender, message, signalSender);
     }
 
     public static class Properties extends AbstractProperties {
         public String adapter;
-        public String pin;
     }
 }

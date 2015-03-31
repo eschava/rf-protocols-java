@@ -26,14 +26,14 @@ public class PI4JAdapter implements Adapter {
     }
 
     @Override
-    public void addListener(String pinName, SignalLengthListener listener) {
-        addListener(pinName, new SignalLengthAdapterLevelListener(listener));
+    public void addListener(SignalLengthListener listener) {
+        addListener(new SignalLengthAdapterLevelListener(listener));
     }
 
     @Override
-    public void addListener(String pinName, final SignalLevelListener listener) {
+    public void addListener(final SignalLevelListener listener) {
         GpioController controller = GpioFactory.getInstance();
-        Pin pin = getPinByName(pinName);
+        Pin pin = getPinByName(properties.inputPin);
         GpioPinDigitalInput input = controller.provisionDigitalInputPin(pin);
         input.addListener(new PI4JPinListener(listener));
     }
@@ -47,9 +47,9 @@ public class PI4JAdapter implements Adapter {
     }
 
     @Override
-    public SignalLengthSender getSignalSender(String pinName) {
+    public SignalLengthSender getSignalSender() {
         GpioController controller = GpioFactory.getInstance();
-        Pin pin = getPinByName(pinName);
+        Pin pin = getPinByName(properties.outputPin);
         GpioPinDigitalOutput output = controller.provisionDigitalOutputPin(pin);
         return new PI4JSignalSender(output);
     }

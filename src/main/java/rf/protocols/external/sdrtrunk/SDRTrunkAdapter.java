@@ -60,7 +60,7 @@ public class SDRTrunkAdapter implements Adapter {
     }
 
     @Override
-    public void addListener(String pin, SignalLengthListener listener) {
+    public void addListener(SignalLengthListener listener) {
         if (!initialized) {
             Tuner tuner = initialize();
             SDRTrunkListener bufferListener = new SDRTrunkListener(tuner, listener, properties.threshold);
@@ -71,12 +71,12 @@ public class SDRTrunkAdapter implements Adapter {
     }
 
     @Override
-    public void addListener(String pin, SignalLevelListener listener) {
+    public void addListener(SignalLevelListener listener) {
         throw new UnsupportedOperationException("Signal level listeners are not supported");
     }
 
     @Override
-    public SignalLengthSender getSignalSender(String pin) {
+    public SignalLengthSender getSignalSender() {
         throw new UnsupportedOperationException();
     }
 }

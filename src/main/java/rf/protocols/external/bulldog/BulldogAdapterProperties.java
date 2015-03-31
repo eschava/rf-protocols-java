@@ -6,6 +6,9 @@ import rf.protocols.core.impl.AbstractProperties;
  * @author Eugene Schava <eschava@gmail.com>
  */
 public class BulldogAdapterProperties extends AbstractProperties {
+    public String inputPin;
+    public String outputPin;
+
     public boolean useInterrupts = true;
     public int pollingDelay = 20;
 

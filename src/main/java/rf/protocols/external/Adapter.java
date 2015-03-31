@@ -12,7 +12,7 @@ import rf.protocols.core.SignalLevelListener;
 public interface Adapter {
     String getName();
     void setProperty(String name, String value);
-    void addListener(String pin, SignalLengthListener listener);
-    void addListener(String pin, SignalLevelListener listener);
-    SignalLengthSender getSignalSender(String pin);
+    void addListener(SignalLengthListener listener);
+    void addListener(SignalLevelListener listener);
+    SignalLengthSender getSignalSender();
 }
