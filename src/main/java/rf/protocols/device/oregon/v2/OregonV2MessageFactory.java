@@ -19,8 +19,7 @@ public class OregonV2MessageFactory implements MessageFactory<BitPacket, OregonV
     @Override
     public OregonV2AbstractMessage createMessage(BitPacket packet) {
         OregonV2AbstractMessage message = null;
-        int type = (packet.getInt(7, 4) << 12) + (packet.getInt(11, 8) << 8) +
-                (packet.getInt(15, 12) << 4) + (packet.getInt(19, 16));
+        int type = OregonV2AbstractMessage.getType(packet);
 
         if (oneOf(type, OregonV2TemperatureMessage.DEVICE_TYPES))
             message = new OregonV2TemperatureMessage(name, packet);

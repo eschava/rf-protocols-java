@@ -18,6 +18,7 @@ public class IntervalsSignalListenerProperties extends AbstractProperties {
 
     public Interval packetSize = new Interval(20, 2000);
     public Interval separatorInterval = new Interval(10000, 12000);
+    public boolean separatorPresent = true;
     public List<NamedInterval> interval = new ResizeableArrayList<NamedInterval>(new NamedIntervalFactory());
 
     // sender properties

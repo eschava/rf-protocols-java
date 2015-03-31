@@ -24,6 +24,7 @@ public class IntervalsSignalListener implements SignalLengthListener {
 
     public void setProperties(IntervalsSignalListenerProperties properties) {
         this.properties = properties;
+        started = !properties.separatorPresent;
     }
 
     @Override
@@ -37,11 +38,11 @@ public class IntervalsSignalListener implements SignalLengthListener {
             if (intervalName != null) {
                 packet.addInterval(intervalName);
             } else {
-                if (properties.isSeparator(lengthInMicros, high) && properties.isCorrectSize(packet.getSize())){
+                if ((!properties.separatorPresent || properties.isSeparator(lengthInMicros, high)) && properties.isCorrectSize(packet.getSize())){
                     packetListener.onPacket(packet);
                 }
                 packet.clear();
-                started = false;
+                started = !properties.separatorPresent;
             }
         }
     }

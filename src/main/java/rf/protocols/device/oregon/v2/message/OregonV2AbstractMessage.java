@@ -13,6 +13,11 @@ import rf.protocols.core.message.RollingIdMessage;
 public abstract class OregonV2AbstractMessage extends AbstractMessage<BitPacket>
         implements DeviceTypeMessage, ChannelIdMessage, RollingIdMessage, BatteryStatusMessage {
 
+    public static int getType(BitPacket packet) {
+        return (packet.getInt(7, 4) << 12) + (packet.getInt(11, 8) << 8) +
+                (packet.getInt(15, 12) << 4) + (packet.getInt(19, 16));
+    }
+
     public OregonV2AbstractMessage(String protocol, BitPacket packet) {
         super(protocol, packet);
     }
