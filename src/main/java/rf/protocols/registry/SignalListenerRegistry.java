@@ -1,9 +1,7 @@
 package rf.protocols.registry;
 
 import rf.protocols.core.*;
-import rf.protocols.core.impl.SignalLengthAdapterLevelListener;
 import rf.protocols.core.impl.SignalLengthListenerGroup;
-import rf.protocols.core.impl.SignalLevelListenerGroup;
 import rf.protocols.device.ambient.ft005th.AmbientFT005THSignalListenerFactory;
 import rf.protocols.device.generic.intervals.IntervalsSignalListenerFactory;
 import rf.protocols.device.generic.intervalsequence.IntervalSequenceSignalListenerFactory;
@@ -108,46 +106,45 @@ public class SignalListenerRegistry {
     }
 
     @SuppressWarnings("unchecked")
-    public <M extends Message> SignalLevelListener createListener(MessageListener<M> messageListener, String protocol) {
-        if (signalListenerFactoryMap.containsKey(protocol)) {
-            SignalLevelListenerFactory listenerFactory = signalListenerFactoryMap.get(protocol);
-            return listenerFactory.createListener(messageListener);
-        }
+    public <M extends Message> SignalLengthListener createListener(MessageListener<M> messageListener, String protocol) {
+//        if (signalListenerFactoryMap.containsKey(protocol)) {
+//            SignalLevelListenerFactory listenerFactory = signalListenerFactoryMap.get(protocol);
+//            return listenerFactory.createListener(messageListener);
+//        }
 
         if (signalLengthListenerFactoryMap.containsKey(protocol)) {
             SignalLengthListenerFactory listenerFactory = signalLengthListenerFactoryMap.get(protocol);
             SignalLengthListener signalLengthListener = listenerFactory.createListener(messageListener);
-            return new SignalLengthAdapterLevelListener(signalLengthListener);
+            return signalLengthListener;
         }
 
         return null;
     }
 
     @SuppressWarnings("unchecked")
-    public <P extends Packet> SignalLevelListener createListener(PacketListener<P> packetListener, String protocol) {
-        if (signalListenerFactoryMap.containsKey(protocol)) {
-            SignalLevelListenerFactory listenerFactory = signalListenerFactoryMap.get(protocol);
-            return listenerFactory.createListener(packetListener);
-        }
+    public <P extends Packet> SignalLengthListener createListener(PacketListener<P> packetListener, String protocol) {
+//        if (signalListenerFactoryMap.containsKey(protocol)) {
+//            SignalLevelListenerFactory listenerFactory = signalListenerFactoryMap.get(protocol);
+//            return listenerFactory.createListener(packetListener);
+//        }
 
         if (signalLengthListenerFactoryMap.containsKey(protocol)) {
             SignalLengthListenerFactory listenerFactory = signalLengthListenerFactoryMap.get(protocol);
             SignalLengthListener signalLengthListener = listenerFactory.createListener(packetListener);
-            return new SignalLengthAdapterLevelListener(signalLengthListener);
+            return signalLengthListener;
         }
 
         return null;
     }
 
-    public <M extends Message> SignalLevelListener createListener(MessageListener<M> messageListener, Collection<String> protocols) {
+    public <M extends Message> SignalLengthListener createListener(MessageListener<M> messageListener, Collection<String> protocols) {
         if (protocols.size() == 1)
             return createListener(messageListener, protocols.iterator().next());
 
-        List<SignalLevelListener> signalLevelListeners = new ArrayList<SignalLevelListener>();
+        List<SignalLengthListener> signalLengthListeners = new ArrayList<SignalLengthListener>();
         Set<String> listenerNamesLeft = new HashSet<String>(protocols);
 
         // signal length listeners
-        List<SignalLengthListener> signalLengthListeners = new ArrayList<SignalLengthListener>();
         for (Iterator<String> iterator = listenerNamesLeft.iterator(); iterator.hasNext(); ) {
             String listenerName = iterator.next();
             if (signalLengthListenerFactoryMap.containsKey(listenerName)) {
@@ -158,27 +155,27 @@ public class SignalListenerRegistry {
             }
         }
 
-        if (signalLengthListeners.size() > 0) {
-            SignalLengthListener lengthListener = signalLengthListeners.size() == 1
-                    ? signalLengthListeners.get(0)
-                    : new SignalLengthListenerGroup(signalLengthListeners);
-            signalLevelListeners.add(new SignalLengthAdapterLevelListener(lengthListener));
-        }
+//        if (signalLengthListeners.size() > 0) {
+//            SignalLengthListener lengthListener = signalLengthListeners.size() == 1
+//                    ? signalLengthListeners.get(0)
+//                    : new SignalLengthListenerGroup(signalLengthListeners);
+//            signalLengthListeners.add(lengthListener);
+//        }
 
-        // signal listeners
-        for (Iterator<String> iterator = listenerNamesLeft.iterator(); iterator.hasNext(); ) {
-            String listenerName = iterator.next();
-            if (signalListenerFactoryMap.containsKey(listenerName)) {
-                SignalLevelListenerFactory listenerFactory = signalListenerFactoryMap.get(listenerName);
-                signalLevelListeners.add(listenerFactory.createListener(messageListener));
-                iterator.remove();
-            }
-        }
+//        // signal listeners
+//        for (Iterator<String> iterator = listenerNamesLeft.iterator(); iterator.hasNext(); ) {
+//            String listenerName = iterator.next();
+//            if (signalListenerFactoryMap.containsKey(listenerName)) {
+//                SignalLevelListenerFactory listenerFactory = signalListenerFactoryMap.get(listenerName);
+//                signalLengthListeners.add(listenerFactory.createListener(messageListener));
+//                iterator.remove();
+//            }
+//        }
 
         // TODO: check if listenerNamesLeft is empty
 
-        return signalLevelListeners.size() == 1
-                ? signalLevelListeners.get(0)
-                : new SignalLevelListenerGroup(signalLevelListeners);
+        return signalLengthListeners.size() == 1
+                ? signalLengthListeners.get(0)
+                : new SignalLengthListenerGroup(signalLengthListeners);
     }
 }

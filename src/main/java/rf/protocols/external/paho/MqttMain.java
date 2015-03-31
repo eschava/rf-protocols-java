@@ -3,10 +3,7 @@ package rf.protocols.external.paho;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
-import rf.protocols.core.Message;
-import rf.protocols.core.MessageListener;
-import rf.protocols.core.SignalLengthSender;
-import rf.protocols.core.SignalLevelListener;
+import rf.protocols.core.*;
 import rf.protocols.external.ognl.PropertiesConfigurer;
 import rf.protocols.external.ognl.PropertiesWithAdapterConfigurer;
 import rf.protocols.external.Adapter;
@@ -60,7 +57,7 @@ public class MqttMain {
         Collection<String> protocolNames = properties.protocolNames.equals("all")
                 ? listenerRegistry.getProtocolNames()
                 : Arrays.asList(properties.protocolNames.split(","));
-        SignalLevelListener signalListener = listenerRegistry.createListener(messageListener, protocolNames);
+        SignalLengthListener signalListener = listenerRegistry.createListener(messageListener, protocolNames);
         adapter.addListener(properties.inputPin, signalListener);
 
         SignalLengthSender signalSender = adapter.getSignalSender(properties.outputPin);

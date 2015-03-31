@@ -3,6 +3,7 @@ package rf.protocols.registry;
 import rf.protocols.external.Adapter;
 import rf.protocols.external.bulldog.BulldogAdapter;
 import rf.protocols.external.pi4j.PI4JAdapter;
+import rf.protocols.external.sdrtrunk.SDRTrunkAdapter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +24,7 @@ public class AdapterRegistry {
     private AdapterRegistry() {
         registerAdapter("bulldog", BulldogAdapter.class);
         registerAdapter("pi4j", PI4JAdapter.class);
+        registerAdapter("sdrtrunk", SDRTrunkAdapter.class);
     }
 
     public void registerAdapter(String name, Class<? extends Adapter> adapterClass) {
@@ -39,6 +41,8 @@ public class AdapterRegistry {
         if (adapter == null) {
             try {
                 Class<? extends Adapter> clazz = adapterClassMap.get(name);
+                if (clazz == null)
+                    throw new IllegalArgumentException("Adapter with name=" + name + " is not registered");
                 adapter = clazz.newInstance();
                 adapterMap.put(name, adapter);
             } catch (Exception e) {

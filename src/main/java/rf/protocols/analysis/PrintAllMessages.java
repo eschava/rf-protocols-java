@@ -2,11 +2,11 @@ package rf.protocols.analysis;
 
 import rf.protocols.core.Message;
 import rf.protocols.core.MessageListener;
-import rf.protocols.core.SignalLevelListener;
+import rf.protocols.core.SignalLengthListener;
 import rf.protocols.core.impl.AbstractProperties;
+import rf.protocols.external.Adapter;
 import rf.protocols.external.ognl.PropertiesConfigurer;
 import rf.protocols.external.ognl.PropertiesWithAdapterConfigurer;
-import rf.protocols.external.Adapter;
 import rf.protocols.registry.AdapterRegistry;
 import rf.protocols.registry.SignalListenerRegistry;
 
@@ -30,6 +30,8 @@ public class PrintAllMessages {
         String propertiesFile = System.getProperty("propertiesFile");
         if (propertiesFile != null)
             propertiesConfigurer.loadFromFile(propertiesFile);
+        // load listener properties from -Dlistener.PROP parameters
+        propertiesConfigurer.loadFromSystemProperties("listener.");
 
         Collection<String> protocolNames = registry.getProtocolNames();
         MessageListener<? extends Message> messageListener = new MessageListener<Message>() {
@@ -44,10 +46,10 @@ public class PrintAllMessages {
                 });
             }
         };
-        SignalLevelListener signalLevelListener = registry.createListener(messageListener, protocolNames);
+        SignalLengthListener signalLengthListener = registry.createListener(messageListener, protocolNames);
 
         Adapter adapter = AdapterRegistry.getInstance().getAdapter(properties.adapter);
-        adapter.addListener(properties.pin, signalLevelListener);
+        adapter.addListener(properties.pin, signalLengthListener);
 
         Thread.sleep(Long.MAX_VALUE);
     }
