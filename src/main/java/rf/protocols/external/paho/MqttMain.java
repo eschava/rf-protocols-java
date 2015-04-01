@@ -3,11 +3,12 @@ package rf.protocols.external.paho;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
-import rf.protocols.core.*;
-import rf.protocols.external.ognl.PropertiesConfigurer;
-import rf.protocols.external.ognl.PropertiesWithAdapterConfigurer;
+import rf.protocols.core.Message;
+import rf.protocols.core.MessageListener;
+import rf.protocols.core.SignalLengthListener;
+import rf.protocols.core.SignalLengthSender;
 import rf.protocols.external.Adapter;
-import rf.protocols.registry.AdapterRegistry;
+import rf.protocols.external.ognl.PropertiesConfigurer;
 import rf.protocols.registry.SignalListenerRegistry;
 
 import java.io.IOException;
@@ -23,7 +24,7 @@ public class MqttMain {
     public static void main(String[] args) throws InterruptedException, MqttException, IOException {
         SignalListenerRegistry listenerRegistry = SignalListenerRegistry.getInstance();
         MqttProperties properties = new MqttProperties();
-        PropertiesConfigurer propertiesConfigurer = new PropertiesWithAdapterConfigurer(properties);
+        PropertiesConfigurer propertiesConfigurer = new MqttPropertiesConfigurer(properties);
 
         String propertiesFile = System.getProperty("propertiesFile");
         if (propertiesFile != null)
@@ -52,17 +53,21 @@ public class MqttMain {
             }
         };
 
-        Adapter adapter = AdapterRegistry.getInstance().getAdapter(properties.adapter);
+        Adapter receiveAdapter = properties.getReceiveAdapter();
+        if (receiveAdapter != null) {
+            Collection<String> protocolNames = properties.protocolNames.equals("all")
+                    ? listenerRegistry.getProtocolNames()
+                    : Arrays.asList(properties.protocolNames.split(","));
+            SignalLengthListener signalListener = listenerRegistry.createListener(messageListener, protocolNames);
+            receiveAdapter.addListener(signalListener);
+        }
 
-        Collection<String> protocolNames = properties.protocolNames.equals("all")
-                ? listenerRegistry.getProtocolNames()
-                : Arrays.asList(properties.protocolNames.split(","));
-        SignalLengthListener signalListener = listenerRegistry.createListener(messageListener, protocolNames);
-        adapter.addListener(signalListener);
-
-        SignalLengthSender signalSender = adapter.getSignalSender();
-        mqttClient.setCallback(new PahoMessageCallback(mqttClient.log, signalSender, properties.receiveTopicTemplate));
-        mqttClient.subscribe(properties.receiveTopicTemplate);
+        Adapter sendAdapter = properties.getSendAdapter();
+        if (sendAdapter != null) {
+            SignalLengthSender signalSender = sendAdapter.getSignalSender();
+            mqttClient.setCallback(new PahoMessageCallback(mqttClient.log, signalSender, properties.receiveTopicTemplate));
+            mqttClient.subscribe(properties.receiveTopicTemplate);
+        }
 
         Thread.sleep(Long.MAX_VALUE);
     }
