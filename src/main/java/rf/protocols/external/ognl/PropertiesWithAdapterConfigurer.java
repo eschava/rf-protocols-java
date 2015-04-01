@@ -12,7 +12,6 @@ import java.util.Map;
 public class PropertiesWithAdapterConfigurer extends PropertiesConfigurer {
     static {
 //        MissingObjectPropertyAccessor.install();
-        PropertiesConfigurerPropertyAccessor.install();
         ProtocolRegistryConfigurerPropertyAccessor.install();
         ProtocolPropertyWrapperPropertyAccessor.install();
         AdapterPropertyWrapperPropertyAccessor.install();

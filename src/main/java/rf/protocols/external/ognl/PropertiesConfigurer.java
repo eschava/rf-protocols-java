@@ -14,6 +14,10 @@ import java.util.Map;
  * @author Eugene Schava <eschava@gmail.com>
  */
 public class PropertiesConfigurer {
+    static {
+        PropertiesConfigurerPropertyAccessor.install();
+    }
+
     Object properties;
 
     public PropertiesConfigurer(Object properties) {
