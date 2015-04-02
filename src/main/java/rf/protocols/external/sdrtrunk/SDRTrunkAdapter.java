@@ -29,11 +29,12 @@ public class SDRTrunkAdapter implements Adapter {
     private SDRTrunkAdapterProperties properties = new SDRTrunkAdapterProperties();
     private PropertiesConfigurer propertiesConfigurer = new PropertiesConfigurer(properties);
 
-    private Tuner initialize() {
+    private TunerChannelSource initialize() {
         ResourceManager resourceManager = new ResourceManager();
 
         SourceConfigTuner sourceConfiguration = (SourceConfigTuner) SourceConfigFactory.getSourceConfiguration(SourceType.TUNER);
         sourceConfiguration.setFrequency(properties.frequency);
+        // TODO: configure sample rate
 
         DecodeConfiguration decodeConfiguration = DecodeConfigFactory.getDecodeConfiguration(DecoderType.NBFM);
 
@@ -45,8 +46,7 @@ public class SDRTrunkAdapter implements Adapter {
         channel.setResourceManager(resourceManager);
 
         ProcessingChain chain = channel.getProcessingChain();
-        TunerChannelSource source = (TunerChannelSource) chain.getSource();
-        return source.getTuner();
+        return (TunerChannelSource) chain.getSource();
     }
 
     @Override
@@ -62,10 +62,12 @@ public class SDRTrunkAdapter implements Adapter {
     @Override
     public void addListener(SignalLengthListener listener) {
         if (!initialized) {
-            Tuner tuner = initialize();
+            TunerChannelSource source = initialize();
+            Tuner tuner = source.getTuner();
             SDRTrunkListener bufferListener = new SDRTrunkListener(tuner, listener, properties.threshold);
             tuner.addListener((Listener<ComplexBuffer>) bufferListener);
             tuner.addListener((FrequencyChangeListener) bufferListener);
+            tuner.removeListener((Listener<ComplexBuffer>) source); // only after our listener is added
             initialized = true;
         }
     }

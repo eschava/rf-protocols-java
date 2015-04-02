@@ -24,19 +24,22 @@ import java.io.OutputStream;
  */
 public class SDRTrunkOOKDumper {
     public static void main(String[] args) throws IOException {
-        SDRTrunkAdapterProperties properties = new SDRTrunkAdapterProperties();
+        Properties properties = new Properties();
         PropertiesConfigurer propertiesConfigurer = new PropertiesConfigurer(properties);
         // load adapter properties from -Dadapter.PROP parameters
         propertiesConfigurer.loadFromSystemProperties("adapter.");
 
-        final Tuner tuner = createTuner(properties);
+        final TunerChannelSource tunerChannelSource = createTuner(properties);
+        Tuner tuner = tunerChannelSource.getTuner();
 
-        Listener listener = new Listener(properties.threshold);
+        Listener listener = new Listener(properties.threshold, properties.printImpulseLength);
         tuner.addListener(listener);
+        tuner.removeListener((sample.Listener<ComplexBuffer>) tunerChannelSource); // only after our listener is added
+
         Runtime.getRuntime().addShutdownHook(listener);
     }
 
-    protected static Tuner createTuner(SDRTrunkAdapterProperties properties) {
+    protected static TunerChannelSource createTuner(SDRTrunkAdapterProperties properties) {
         ResourceManager resourceManager = new ResourceManager();
 
         SourceConfigTuner sourceConfiguration = (SourceConfigTuner) SourceConfigFactory.getSourceConfiguration(SourceType.TUNER);
@@ -52,8 +55,7 @@ public class SDRTrunkOOKDumper {
         channel.setResourceManager(resourceManager);
 
         ProcessingChain chain = channel.getProcessingChain();
-        TunerChannelSource source = (TunerChannelSource) chain.getSource();
-        return source.getTuner();
+        return (TunerChannelSource) chain.getSource();
     }
 
     private static class Listener extends Thread implements sample.Listener<ComplexBuffer> {
@@ -61,13 +63,16 @@ public class SDRTrunkOOKDumper {
 
         private final OutputStream outputStream;
         private final byte[] buffer = new byte[1000000];
+        private final boolean printImpulseLength;
 
         private int index_ = 0;
         private boolean active = false;
+        private long lastInd;
 
-        public Listener(float threshold) throws IOException {
+        public Listener(float threshold, boolean printImpulseLength) throws IOException {
             outputStream = new FileOutputStream("dump.raw");
             decoder = new OOKDecoder(threshold);
+            this.printImpulseLength = printImpulseLength;
 
 //            // create streams and write wav header
 //            AudioFormat audioFormat = new AudioFormat(44100, 8, 2, true, false);
@@ -84,8 +89,18 @@ public class SDRTrunkOOKDumper {
                 long ind = decoder.process(sample);
                 if (ind > 0) {
                     active = true;
+
+                    if (printImpulseLength) {
+                        System.out.println(ind - lastInd);
+                        lastInd = ind;
+                    }
                 } else if (ind < 0) {
                     active = false;
+
+                    if (printImpulseLength) {
+                        System.out.println(-ind - lastInd);
+                        lastInd = -ind;
+                    }
                 }
 
                 buffer[index_++] = (byte) (sample / 2);
@@ -113,5 +128,9 @@ public class SDRTrunkOOKDumper {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static class Properties extends SDRTrunkAdapterProperties {
+        public boolean printImpulseLength = false;
     }
 }
