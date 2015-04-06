@@ -1,4 +1,4 @@
-package rf.protocols.device.ambient.ft005th;
+package rf.protocols.device.ambient.ws05;
 
 import rf.protocols.core.PacketListener;
 import rf.protocols.core.SignalLengthListener;
@@ -7,24 +7,24 @@ import rf.protocols.core.impl.BitPacket;
 /**
  * @author Eugene Schava <eschava@gmail.com>
  */
-public class AmbientFT005THSignalListener implements SignalLengthListener {
+public class AmbientWS05SignalListener implements SignalLengthListener {
 
     private static final int MAX_PACKET_LENGTH = 100;
 
     private final BitPacket packet = new BitPacket(MAX_PACKET_LENGTH);
     private final PacketListener<BitPacket> packetListener;
 
-    private AmbientFT005THSignalListenerProperties properties = new AmbientFT005THSignalListenerProperties();
+    private AmbientWS05SignalListenerProperties properties = new AmbientWS05SignalListenerProperties();
 
-    public AmbientFT005THSignalListener(PacketListener<BitPacket> packetListener) {
+    public AmbientWS05SignalListener(PacketListener<BitPacket> packetListener) {
         this.packetListener = packetListener;
     }
 
-    public void setProperties(AmbientFT005THSignalListenerProperties properties) {
+    public void setProperties(AmbientWS05SignalListenerProperties properties) {
         this.properties = properties;
     }
 
-    public AmbientFT005THSignalListenerProperties getProperties() {
+    public AmbientWS05SignalListenerProperties getProperties() {
         return properties;
     }
 

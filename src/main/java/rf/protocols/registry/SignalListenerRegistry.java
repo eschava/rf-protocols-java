@@ -2,7 +2,7 @@ package rf.protocols.registry;
 
 import rf.protocols.core.*;
 import rf.protocols.core.impl.SignalLengthListenerGroup;
-import rf.protocols.device.ambient.ft005th.AmbientFT005THSignalListenerFactory;
+import rf.protocols.device.ambient.ws05.AmbientWS05SignalListenerFactory;
 import rf.protocols.device.generic.intervals.IntervalsSignalListenerFactory;
 import rf.protocols.device.generic.intervalsequence.IntervalSequenceSignalListenerFactory;
 import rf.protocols.device.lacrosse.LacrosseSignalListenerFactory;
@@ -41,7 +41,7 @@ public class SignalListenerRegistry {
         registerFactory(new OwlSignalListenerFactory());
 //        registerFactory(new PT2262SignalListenerFactory()); // deprecated, use RemoteSwitch
         registerFactory(new LacrosseSignalListenerFactory());
-        registerFactory(new AmbientFT005THSignalListenerFactory());
+        registerFactory(new AmbientWS05SignalListenerFactory());
         registerFactory(new RemoteSwitchSignalListenerFactory());
         registerFactory(new IntervalsSignalListenerFactory());
         registerFactory(new IntervalSequenceSignalListenerFactory());

@@ -1,4 +1,4 @@
-package rf.protocols.device.ambient.ft005th;
+package rf.protocols.device.ambient.ws05;
 
 import rf.protocols.core.MessageMetaData;
 
@@ -8,7 +8,7 @@ import java.util.Collection;
 /**
  * @author Eugene Schava <eschava@gmail.com>
  */
-public class AmbientFT005THMessageMetaData implements MessageMetaData<AmbientFT005THMessage> {
+public class AmbientWS05MessageMetaData implements MessageMetaData<AmbientWS05Message> {
     public static final String TEMPERATURE_FIELD = "Temperature";
     public static final String HUMIDITY_FIELD = "Humidity";
 
@@ -25,7 +25,7 @@ public class AmbientFT005THMessageMetaData implements MessageMetaData<AmbientFT0
     }
 
     @Override
-    public double getNumericField(AmbientFT005THMessage message, String fieldName) {
+    public double getNumericField(AmbientWS05Message message, String fieldName) {
         if (fieldName.equals(TEMPERATURE_FIELD))
             return message.getTemperature();
         else if (fieldName.equals(HUMIDITY_FIELD))
@@ -34,7 +34,7 @@ public class AmbientFT005THMessageMetaData implements MessageMetaData<AmbientFT0
     }
 
     @Override
-    public String getStringField(AmbientFT005THMessage message, String fieldName) {
+    public String getStringField(AmbientWS05Message message, String fieldName) {
         throw new UnsupportedOperationException();
     }
 }

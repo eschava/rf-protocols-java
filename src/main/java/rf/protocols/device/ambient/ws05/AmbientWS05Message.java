@@ -1,4 +1,4 @@
-package rf.protocols.device.ambient.ft005th;
+package rf.protocols.device.ambient.ws05;
 
 import rf.protocols.core.MessageMetaData;
 import rf.protocols.core.impl.AbstractMessage;
@@ -10,14 +10,14 @@ import rf.protocols.core.message.TemperatureMessage;
 /**
  * @author Eugene Schava <eschava@gmail.com>
  */
-public class AmbientFT005THMessage extends AbstractMessage<BitPacket>
+public class AmbientWS05Message extends AbstractMessage<BitPacket>
         implements RollingIdMessage, TemperatureMessage, HumidityMessage {
 
-    public static final String PROTOCOL = "AmbientFT005TH";
+    public static final String PROTOCOL = "AmbientWS05";
 
-    private static final MessageMetaData METADATA = new AmbientFT005THMessageMetaData();
+    private static final MessageMetaData METADATA = new AmbientWS05MessageMetaData();
 
-    public AmbientFT005THMessage(BitPacket packet) {
+    public AmbientWS05Message(BitPacket packet) {
         super(PROTOCOL, packet);
     }
 
