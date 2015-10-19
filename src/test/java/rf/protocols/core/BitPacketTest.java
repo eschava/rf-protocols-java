@@ -14,8 +14,7 @@ public class BitPacketTest {
     @Test
     public void testGetInt() throws Exception {
         String message = "01110101";
-        BitPacket packet = new BitPacket(20);
-        fillFromBinString(message, packet);
+        BitPacket packet = BitPacket.valueOfBinString(message, 20);
 
         assertEquals(7, packet.getInt(1, 3));
         assertEquals(7, packet.getInt(3, 1));
@@ -26,54 +25,30 @@ public class BitPacketTest {
     @Test
     public void testToString() throws Exception {
         String hex = "62605F1810207E670000";
-        BitPacket packet = new BitPacket(100);
-        fillFromHexString(hex, packet);
+        BitPacket packet = BitPacket.valueOfHexString(hex, 100);
         assertEquals(hex.toLowerCase(), packet.toString());
 
-        packet = new BitPacket(500);
-        fillFromHexString(hex, packet);
+        packet = BitPacket.valueOfHexString(hex, 500);
         assertEquals(hex.toLowerCase(), packet.toString());
 
         hex = "62605F1810207E67000"; // nibble
-        packet = new BitPacket(500);
-        fillFromHexString(hex, packet);
+        packet = BitPacket.valueOfHexString(hex, 500);
         assertEquals(hex.toLowerCase(), packet.toString());
 
         hex = "62605F1810207E67005"; // nibble
-        packet = new BitPacket(500);
-        fillFromHexString(hex, packet);
+        packet = BitPacket.valueOfHexString(hex, 500);
         assertEquals(hex.toLowerCase(), packet.toString());
 
         hex = "62"; // byte
-        packet = new BitPacket(500);
-        fillFromHexString(hex, packet);
+        packet = BitPacket.valueOfHexString(hex, 500);
         assertEquals(hex.toLowerCase(), packet.toString());
 
         hex = "6"; // nibble
-        packet = new BitPacket(500);
-        fillFromHexString(hex, packet);
+        packet = BitPacket.valueOfHexString(hex, 500);
         assertEquals(hex.toLowerCase(), packet.toString());
 
         String bin = "1"; // bits
-        packet = new BitPacket(500);
-        fillFromBinString(bin, packet);
+        packet = BitPacket.valueOfBinString(bin, 500);
         assertEquals("1", packet.toString());
-    }
-
-    private static void fillFromBinString(String bin, BitPacket packet) {
-        for (byte b : bin.getBytes())
-            packet.addBit(b == '1');
-    }
-
-    private static void fillFromHexString(String hex, BitPacket packet) {
-        for (int i = 0; i < hex.length(); i += 2) {
-            boolean nibble = hex.length() - i == 1;
-            String bs = hex.substring(i, i + (nibble ? 1 : 2));
-            int b = Integer.parseInt(bs, 16);
-            for (int j = 0; j < (nibble ? 4 : 8); j++) {
-                packet.addBit((b & 1) == 1);
-                b >>= 1;
-            }
-        }
     }
 }

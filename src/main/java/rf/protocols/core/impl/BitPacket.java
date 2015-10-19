@@ -154,4 +154,25 @@ public class BitPacket implements Packet, Cloneable {
         }
         return packet;
     }
+
+    public static BitPacket valueOfBinString(String bin, int maxBits) {
+        BitPacket packet = new BitPacket(maxBits);
+        for (byte b : bin.getBytes())
+            packet.addBit(b == '1');
+        return packet;
+    }
+
+    public static BitPacket valueOfHexString(String hex, int maxBits) {
+        BitPacket packet = new BitPacket(maxBits);
+        for (int i = 0; i < hex.length(); i += 2) {
+            boolean nibble = hex.length() - i == 1;
+            String bs = hex.substring(i, i + (nibble ? 1 : 2));
+            int b = Integer.parseInt(bs, 16);
+            for (int j = 0; j < (nibble ? 4 : 8); j++) {
+                packet.addBit((b & 1) == 1);
+                b >>= 1;
+            }
+        }
+        return packet;
+    }
 }

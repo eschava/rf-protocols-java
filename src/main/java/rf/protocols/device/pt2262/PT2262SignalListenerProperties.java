@@ -15,4 +15,8 @@ public class PT2262SignalListenerProperties extends AbstractProperties {
     public double shortSignalTolerance = 0.6;
     public double longSignalFraction = 3d / 31;
     public double longSignalTolerance = 0.2;
+
+    // for sending
+    public long separatorLength = 11000;
+    public int repeats = 8;
 }

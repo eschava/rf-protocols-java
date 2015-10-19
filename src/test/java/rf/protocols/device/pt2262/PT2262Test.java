@@ -2,6 +2,8 @@ package rf.protocols.device.pt2262;
 
 import org.junit.Test;
 import rf.protocols.core.MessageListener;
+import rf.protocols.core.SignalLengthSender;
+import rf.protocols.core.impl.BitPacket;
 import rf.protocols.core.message.StringMessage;
 
 import static junit.framework.TestCase.assertEquals;
@@ -34,5 +36,34 @@ public class PT2262Test {
 
         StringMessage message = messages[0];
         assertEquals("f75dfc", message.getValue());
+    }
+
+    @Test
+    public void testSendAndReceive() throws Exception {
+        String message = "f75dfc";
+
+        final StringMessage[] messages = new StringMessage[1];
+        MessageListener<StringMessage> messageListener = new MessageListener<StringMessage>() {
+            @Override
+            public void onMessage(StringMessage message) {
+                messages[0] = (StringMessage) message.clone();
+            }
+        };
+
+        PT2262SignalListenerFactory factory = new PT2262SignalListenerFactory();
+        final PT2262SignalListener signalListener = factory.createListener(messageListener);
+
+        PT2262PacketFactory packetFactory = new PT2262PacketFactory();
+        PT2262PacketSender sender = new PT2262PacketSender();
+
+        BitPacket packet = packetFactory.createPacket(new StringMessage(null, message));
+        sender.send(packet, new SignalLengthSender() {
+            @Override
+            public void send(boolean high, long lengthInMicros) {
+                signalListener.onSignal(high, lengthInMicros);
+            }
+        });
+
+        assertEquals(message, messages[0].getValue());
     }
 }

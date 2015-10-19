@@ -11,6 +11,8 @@ import rf.protocols.device.generic.intervalsequence.IntervalSequencePacketFactor
 import rf.protocols.device.generic.intervalsequence.IntervalSequenceProtocolProperties;
 import rf.protocols.device.generic.lengths.LengthsPacketFactory;
 import rf.protocols.device.generic.lengths.LengthsPacketSender;
+import rf.protocols.device.pt2262.PT2262PacketFactory;
+import rf.protocols.device.pt2262.PT2262PacketSender;
 import rf.protocols.device.remoteswitch.RemoteSwitchPacketFactory;
 import rf.protocols.device.remoteswitch.RemoteSwitchPacketSender;
 
@@ -22,6 +24,7 @@ import java.util.Map;
  */
 public class StringMessageSenderRegistry {
     public static final String REMOTE_SWITCH_PROTOCOL = "RemoteSwitch";
+    public static final String PT2262_PROTOCOL = "PT2262";
     public static final String INTERVALS_PROTOCOL = "Intervals";
     public static final String INTERVAL_SEQUENCE_PROTOCOL = "IntervalSequence";
     public static final String LENGTHS_PROTOCOL = "Lengths";
@@ -40,6 +43,9 @@ public class StringMessageSenderRegistry {
         // register all known factories
         registerSender(REMOTE_SWITCH_PROTOCOL, new RemoteSwitchPacketSender());
         registerPacketFactory(REMOTE_SWITCH_PROTOCOL, new RemoteSwitchPacketFactory());
+
+        registerSender(PT2262_PROTOCOL, new PT2262PacketSender());
+        registerPacketFactory(PT2262_PROTOCOL, new PT2262PacketFactory());
 
         registerSender(INTERVALS_PROTOCOL, new IntervalsPacketSender());
         registerPacketFactory(INTERVALS_PROTOCOL, new IntervalsPacketFactory());
@@ -89,7 +95,11 @@ public class StringMessageSenderRegistry {
         StringMessage stringMessage = new StringMessage(senderName, message);
 
         PacketFactory packetFactory = packetFactoryMap.get(senderName);
+        if (packetFactory == null)
+            throw new IllegalArgumentException("Packet factory for protocol " + senderName + " is not registered");
         PacketSender packetSender = packetSenderMap.get(senderName);
+        if (packetSender == null)
+            throw new IllegalArgumentException("Packet sender for protocol " + senderName + " is not registered");
 
         Packet packet = packetFactory.createPacket(stringMessage);
         packetSender.send(packet, signalSender);

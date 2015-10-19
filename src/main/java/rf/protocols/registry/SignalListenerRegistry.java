@@ -9,6 +9,7 @@ import rf.protocols.device.lacrosse.LacrosseSignalListenerFactory;
 import rf.protocols.device.oregon.sl109.OregonSL109SignalListenerFactory;
 import rf.protocols.device.oregon.v2.OregonV2SignalListenerFactory;
 import rf.protocols.device.owl.OwlSignalListenerFactory;
+import rf.protocols.device.pt2262.PT2262SignalListenerFactory;
 import rf.protocols.device.remoteswitch.RemoteSwitchSignalListenerFactory;
 import rf.protocols.registry.interfaces.ConceptSignalListenerFactory;
 import rf.protocols.registry.interfaces.SignalLengthListenerFactory;
@@ -39,7 +40,7 @@ public class SignalListenerRegistry {
         registerFactory(new OregonV2SignalListenerFactory());
 //        registerFactory(new OregonV3SignalListenerFactory());
         registerFactory(new OwlSignalListenerFactory());
-//        registerFactory(new PT2262SignalListenerFactory()); // deprecated, use RemoteSwitch
+        registerFactory(new PT2262SignalListenerFactory());
         registerFactory(new LacrosseSignalListenerFactory());
         registerFactory(new AmbientWS05SignalListenerFactory());
         registerFactory(new RemoteSwitchSignalListenerFactory());

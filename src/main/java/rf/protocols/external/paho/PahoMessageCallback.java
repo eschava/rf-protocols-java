@@ -23,10 +23,14 @@ public class PahoMessageCallback implements MqttCallback {
 
     @Override
     public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
-        String sender = getProtocol(topic);
-        String message = new String(mqttMessage.getPayload());
+        try {
+            String sender = getProtocol(topic);
+            String message = new String(mqttMessage.getPayload());
 
-        StringMessageSenderRegistry.getInstance().sendMessage(sender, message, signalSender);
+            StringMessageSenderRegistry.getInstance().sendMessage(sender, message, signalSender);
+        } catch (Exception e) {
+            log.severe(getClass().getName(), "messageArrived", e.getMessage(), null, e);
+        }
     }
 
     String getProtocol(String topic) {
